@@ -58,7 +58,10 @@ export default class ProjectsComponent extends Component {
 
 }
 
-function render({ userId, value, id, completed = false }) {
+let i = 0;
+
+
+function render({ value, id, completed = false, author }) {
 
 	return `
 		<div class="project-item" data-id="${id}">
@@ -75,8 +78,8 @@ function render({ userId, value, id, completed = false }) {
 			        </svg>
 			    </label>
 			</div>
-			<span class="project-name ${completed ? 'deleted' : ''}">${value} <a href="#">by Achek Slime</a></span>
-			<small class="project-users">Users: <span>${id}</span></small>
+			<span class="project-name ${completed ? 'deleted' : ''}">${value} <a href="#">by ${ author }</a></span>
+			<small class="project-users">Users: <span>${i++}</span></small>
 		</div>
 	`
 

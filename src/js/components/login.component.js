@@ -66,6 +66,8 @@ function loginSubmitHandler(e) {
 
 		authWithData(email, password)
 			.then(data => {
+
+				console.log(data)
 				if (data.error) {
 
 					localStorage.setItem('login', '') // зашли fail
@@ -77,19 +79,24 @@ function loginSubmitHandler(e) {
 				
 
 				this.hide()
-				showElemsIfLoginIn()
 
 				localStorage.setItem('login', true) // зашли норм
 				// Заполняем данные аккаунты в LS
 				localStorage.setItem('email', data['email'])
+				const str = localStorage.getItem('email').split('@')[0]
+				localStorage.setItem('nickname', str)
+
 				localStorage.setItem('idToken', data['idToken'])
 				localStorage.setItem('refreshToken', data['refreshToken'])
+
+				showElemsIfLoginIn()
 
 
 			})
 			.catch(e => {
-				console.warn('Не судьба, но разработчик видит это сообщение')
+				console.warn(e)
 			})
+
 
 	}
 
@@ -100,6 +107,5 @@ function showElemsIfLoginIn() {
 	LoginComponent.main.classList.remove('hide')
 	LoginComponent.add.classList.remove('hide')
 	LoginComponent.header.classList.remove('hide')
-	const str = localStorage.getItem('email').split('@')[0]
-	document.querySelector('.header-naming__name').textContent = str
+	document.querySelector('.header-naming__name').textContent = localStorage.getItem('nickname')
 }

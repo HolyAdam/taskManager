@@ -82,7 +82,8 @@ async function submitFormHandler(e) {
 
 		const data = {
 			value: this.state.value,
-			date: new Date()
+			date: new Date(),
+			author: localStorage.getItem('nickname')
 		}
 
 		this.$el.querySelector('input').value = ''
