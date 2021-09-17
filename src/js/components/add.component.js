@@ -1,4 +1,5 @@
 import Component from './Component'
+import apiService from '../services/apiService'
 
 export default class AddComponent extends Component {
 
@@ -31,6 +32,10 @@ export default class AddComponent extends Component {
 
 
 function addInputHandler(e) {
+
+	e.preventDefault()
+
+	
 	const target = e.target
 
 	this.state.value = target.value
@@ -71,11 +76,21 @@ function removeErrors(isFocused = false) {
 
 async function submitFormHandler(e) {
 
+	e.preventDefault()
+
 	if (this.state.valid) {
 
 		const data = {
-			value: this.state.value
+			value: this.state.value,
+			date: new Date()
 		}
+
+		this.$el.querySelector('input').value = ''
+		this.$el.querySelector('button').disabled = true		
+
+
+
+		const dataId = await apiService.postTask(data)
 	
 	}
 

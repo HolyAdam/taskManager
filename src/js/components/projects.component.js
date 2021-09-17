@@ -1,5 +1,6 @@
 import Component from './component'
 import apiService from '../services/apiService'
+import toArray from '../utils/toArray'
 
 export default class ProjectsComponent extends Component {
 
@@ -28,7 +29,20 @@ export default class ProjectsComponent extends Component {
 
 		let data = await apiService.fetchTodos()
 
+		data = toArray.giveMeArray(data)
+		console.log(data)
+
 		this.loader.hide()
+
+		if (!data || data === 'null') {
+
+			const p = '<p style="text-align: center">Элементов нет</p>'
+
+			ProjectsComponent.childContainer.innerHTML = p
+
+			return false
+
+		}
 
 		data = data.slice(0, 40)
 
@@ -44,7 +58,7 @@ export default class ProjectsComponent extends Component {
 
 }
 
-function render({ userId, title, id, completed = false }) {
+function render({ userId, value, id, completed = false }) {
 
 	return `
 		<div class="project-item" data-id="${id}">
@@ -61,7 +75,7 @@ function render({ userId, title, id, completed = false }) {
 			        </svg>
 			    </label>
 			</div>
-			<span class="project-name ${completed ? 'deleted' : ''}">${title} <a href="#">by Achek Slime</a></span>
+			<span class="project-name ${completed ? 'deleted' : ''}">${value} <a href="#">by Achek Slime</a></span>
 			<small class="project-users">Users: <span>${id}</span></small>
 		</div>
 	`
