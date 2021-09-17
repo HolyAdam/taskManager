@@ -25,7 +25,9 @@ class ApiService {
 			const request = new Request(`${this.url}/tasks.json`, {
 				method: 'POST',
 				body: JSON.stringify(task),
-				'Content-Type': 'application/json'
+				headers: {
+					'Content-Type': 'application/json'
+				}
 			})
 			const response = await fetch(request)
 

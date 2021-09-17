@@ -1,4 +1,5 @@
 import Component from './component'
+import authWithData from '../utils/auth'
 
 export default class LoginComponent extends Component {
 
@@ -63,20 +64,32 @@ function loginSubmitHandler(e) {
 			password
 		}
 
-		if (obj.email === 'test123@yandex.ru' && obj.password === '12345') {
-			this.hide()
-			showElemsIfLoginIn()
+		authWithData(email, password)
+			.then(data => {
+				if (data.error) {
+
+					localStorage.setItem('login', '') // зашли fail
+					alert('Неправильная почта или пароль')
+
+					return Promise.reject('sadge')
+
+				}
+				
+
+				this.hide()
+				showElemsIfLoginIn()
+
+				localStorage.setItem('login', true) // зашли норм
+				// Заполняем данные аккаунты в LS
+				localStorage.setItem('email', data['email'])
+				localStorage.setItem('idToken', data['idToken'])
+				localStorage.setItem('refreshToken', data['refreshToken'])
 
 
-			localStorage.setItem('login', true) // зашли норм
-
-		} else {
-
-			localStorage.setItem('login', '') // зашли fail
-			alert('Неправильная почта или пароль')
-		
-		}
-
+			})
+			.catch(e => {
+				console.warn('Не судьба, но разработчик видит это сообщение')
+			})
 
 	}
 
@@ -87,4 +100,6 @@ function showElemsIfLoginIn() {
 	LoginComponent.main.classList.remove('hide')
 	LoginComponent.add.classList.remove('hide')
 	LoginComponent.header.classList.remove('hide')
+	const str = localStorage.getItem('email').split('@')[0]
+	document.querySelector('.header-naming__name').textContent = str
 }
