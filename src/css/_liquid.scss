@@ -1,0 +1,260 @@
+:root {
+    --c-active: #32e191;
+    --c-active-inner: #000;
+    --c-default: #32e191;
+    --c-default-dark: #32e191;
+    --c-black: #000;
+}
+
+.radio,
+.checkbox,
+.switch {
+    display: table;
+    border-radius: var(--border-radius, 12px) var(--border-radius-corner, 12px) var(--border-radius, 12px) var(--border-radius, 12px);
+    position: relative;
+    overflow: hidden;
+    input {
+        appearance: none;
+        outline: none;
+        border: none;
+        background: var(--input-background, none);
+        display: block;
+        cursor: pointer;
+        margin: 0;
+        padding: 0;
+        border-radius: inherit;
+        width: var(--input-width, 22px);
+        height: var(--input-height, 22px);
+    }
+    svg {
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        pointer-events: none;
+        overflow: hidden;
+        fill: var(--c-active-inner);
+        transform: scale(1.05) translateZ(0);
+    }
+}
+
+.radio,
+.checkbox {
+    input {
+        --border-color: var(--c-default);
+        --border-width: 2px;
+        box-shadow: inset 0 0 0 var(--border-width) var(--border-color);
+        &:checked {
+            --border-color: var(--c-active);
+        }
+        &:not(:checked) {
+            transition: box-shadow .25s;
+            &:hover {
+                --border-width: 3px;
+                --border-color: var(--c-active);
+            }
+        }
+    }
+}
+
+.radio {
+    input {
+        &:checked {
+            --border-width: 6.75px;
+        }
+        & + svg {
+            --top-y: 0;
+            --dot-y: -17px;
+            --drop-y: -14px;
+            --top-s-x: 1.75;
+            --top-s-y: 1;
+            .top {
+                transform-origin: 12px -12px;
+                transform: translateY(var(--top-y)) scale(var(--top-s-x), var(--top-s-y)) translateZ(0);
+            }
+            .dot {
+                transform: translateY(var(--dot-y)) translateZ(0);
+            }
+            .drop {
+                transform: translateY(var(--drop-y)) translateZ(0);
+            }
+        }
+    }
+}
+
+.checkbox {
+    --border-radius: 5px;
+    --border-radius-corner: 5px;
+    input {
+        &:checked {
+            --border-width: 12px;
+            & + svg {
+                --tick-offset: 46.5px;
+            }
+        }
+        & + svg {
+            --dot-x: 14px;
+            --dot-y: -14px;
+            --dot-s: 1;
+            --tick-offset: 20.5px;
+            --tick-array: 16.5px;
+            --tick-s: 1;
+            --drop-s: 1;
+            .tick {
+                fill: none;
+                stroke-width: 3px;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke: var(--c-active-inner);
+                stroke-dasharray: var(--tick-array) 33px;
+                stroke-dashoffset: var(--tick-offset);
+                transform-origin: 10.5px 16px;
+                transform: scale(var(--tick-s)) translateZ(0);
+            }
+            .dot {
+                transform-origin: 10.5px 15.5px;
+                transform: translate(var(--dot-x), var(--dot-y)) scale(var(--dot-s)) translateZ(0);
+            }
+            .drop {
+                transform-origin: 25px -1px;
+                transform: scale(var(--drop-s)) translateZ(0);
+            }
+        }
+    }
+}
+
+.switch {
+    --input-width: 38px;
+    input {
+        --input-background: var(--c-default);
+        &:checked {
+            --input-background: var(--c-active);
+            & + svg {
+                --default-s: 0;
+                --default-x: 8px;
+                --dot-s: 1;
+                --dot-x: 0px;
+            }
+        }
+        & + svg {
+            --input-background: var(--c-default);
+            --default-s: 1;
+            --default-x: 0px;
+            --dot-s: 0;
+            --dot-x: -8px;
+        }
+    }
+    .default {
+        transform-origin: 12px 12px;
+        transform: translateX(var(--default-x)) scale(var(--default-s)) translateZ(0);
+    }
+    .dot {
+        transform-origin: 26px 12px;
+        transform: translateX(var(--dot-x)) scale(var(--dot-s)) translateZ(0);
+    }
+}
+
+.start .btn {
+    width: 180px;
+    padding: 15px 0;
+    font-size: 18px;
+}
+
+.btn {
+    appearance: none;
+    border: none;
+    position: relative;
+    background: var(--c-black);
+    color: #fff;
+    overflow: hidden;
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: 600;
+    display: block;
+    width: 132px;
+    text-align: center;
+    border-radius: 7px;
+    margin: 0 auto;
+    padding: 12px 0;
+    transition: color 0.4s;
+    span {
+        position: relative;
+        z-index: 1;
+    }
+    svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        fill: var(--c-active);
+        circle {
+            transition: transform var(--duration, .25s) ease-out;
+            &.top-left {
+                transform: translate(var(--spacing, -16px), var(--spacing, -40px));
+            }
+            &.middle-bottom {
+                transform: translate(var(--spacing, 8px), var(--spacing, 40px));
+            }
+            &.top-right {
+                transform: translate(var(--spacing, 40px), var(--spacing, -40px));
+            }
+            &.right-bottom {
+                transform: translate(var(--spacing, 4px), var(--spacing, 40px));
+            }
+            &.left-bottom {
+                transform: translate(var(--spacing, -40px), var(--spacing, 40px));
+            }
+        }
+    }
+    &:hover {
+        --spacing: 0;
+        --duration: .4s;
+        color: #000;
+    }
+}
+
+@media (max-width: 620px) {
+	radio,
+	.checkbox,
+	.switch {
+	    display: table;
+	    border-radius: var(--border-radius, 12px) var(--border-radius-corner, 12px) var(--border-radius, 12px) var(--border-radius, 12px);
+	    position: relative;
+	    overflow: hidden;
+	    input {
+	        appearance: none;
+	        outline: none;
+	        border: none;
+	        background: var(--input-background, none);
+	        display: block;
+	        cursor: pointer;
+	        margin: 0;
+	        padding: 0;
+	        border-radius: inherit;
+	        width: var(--input-width, 18px);
+	        height: var(--input-height, 18px);
+	    }
+	}
+
+    .start .btn {
+        width: 155px;
+        padding: 12px 0;
+        font-size: 16px;
+    }
+
+}
+
+
+@media (max-width: 445px) {
+    .start .btn {
+        width: 150px;
+        padding: 12px 0;
+        font-size: 14px;
+    }
+}

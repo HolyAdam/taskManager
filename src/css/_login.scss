@@ -1,0 +1,135 @@
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  padding-top: 20px;
+  padding-bottom: 25px;
+  width: 100%;
+  min-height: 100vh;
+  border-radius: 4px;
+}
+
+.login form > svg {
+  margin: auto auto;
+  display: block;
+}
+
+  .login fieldset {
+    border: 0;
+    padding: 0;
+    margin: 1.2rem 0 0 0;
+  }
+
+.login legend {
+  margin: 0;
+  padding: 0;
+}
+
+
+.login fieldset > div {
+  border-radius: 7px;
+  position: relative;
+  margin-top: 0.5rem;
+  background: $black;
+}
+
+.login fieldset .placeholder {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  transform: translate(0, -50%); 
+  z-index: 5;
+  font-size: 16px;
+  transition: all 0.15s;
+  color: #444;
+  pointer-events: none;
+}
+
+.login fieldset .placeholder.active {
+  font-size: 0.6rem;
+  color: #777;
+  margin-top: -0.9rem;
+}
+
+.login fieldset input {
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  border: 0;
+  padding: 1rem;
+  font-size: 16px;
+  position: relative;
+  z-index: 3;
+  background-color: $black;
+  color: #fff;
+  outline: none;
+  border: none;
+  border-radius: 7px;
+  border: 1px solid transparent;
+}
+
+
+.form-title {
+  text-align: center;
+  font-size: 30px;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.login fieldset.with-placeholder input {
+  padding: 1.3rem 1rem 0.7rem 1rem;
+  font-family: inherit;
+  background-color: $black;
+  color: #fff;
+  outline: none;
+  border: none;
+  border-radius: 7px;
+  font-size: 16px;
+  border: 1px solid transparent;
+}
+
+#loginBtn {
+  margin: auto;
+  margin-top: 25px;
+  display: block;
+  border-radius: 7px !important;
+  font-family: inherit;
+}
+
+
+@media (max-width: 625px) {
+  .login fieldset {
+    margin-top: 10px;
+  }
+
+  .login fieldset.with-placeholder input {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 14px
+  }
+
+  .login fieldset input {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 14px
+  }
+
+  .login fieldset .placeholder  {
+    display: none;
+  }
+
+  #loginBtn {
+    margin: auto;
+    margin-top: 20px;
+    display: block;
+    border-radius: 7px !important;
+  }
+
+  .login legend {
+    font-size: 14px;
+  }
+
+}

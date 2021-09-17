@@ -1,0 +1,34 @@
+.arrow,
+.arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+
+.arrow {
+  visibility: hidden;
+}
+
+.arrow::before {
+  visibility: visible;
+  content: '';
+  transform: rotate(45deg);
+}
+
+.tooltip {
+    background: $percent;
+    color: #000;
+    font-weight: bold;
+    padding: 4px 8px;
+    font-size: 13px;
+    border-radius: 4px;
+    position: absolute;
+    top: -20px;
+    display: none;
+    z-index: 5;
+  }
+
+  .popcorn {
+  	position: relative;
+  }

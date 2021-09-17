@@ -1,0 +1,58 @@
+.start
+	height: 100vh
+	display: flex
+	justify-content: center
+	align-items: center
+	flex-direction: column
+	flex-wrap: wrap
+	text-align: center
+	&-wrapper
+		max-width: 885px
+		padding: 0 20px
+	&-title
+		margin: 0
+		font-weight: 400
+		font-size: 42px
+		margin-bottom: 15px
+		color: #fff
+	&-subtitle
+		font-size: 26px
+		color: #aaa
+		font-weight: 400
+		display: block
+		margin-bottom: 20px
+	&-logo
+		margin-bottom: 20px
+	&-btn
+		background-color: $percent
+		color: #000
+		border: none
+		font-size: 16px
+		font-family: inherit
+		padding: 10px 40px
+		cursor: pointer
+		border-radius: 5px
+
+
+@media (max-width: 625px)
+	.start
+		&-title
+			font-size: 36px
+			margin-bottom: 12px
+		&-subtitle
+			font-size: 20px
+			margin-bottom: 15px
+		&-logo
+			max-width: 120px
+
+@media (max-width: 445px)
+	.start
+		&-title
+			font-size: 28px
+		&-subtitle
+			font-size: 16px
+		&-logo
+			max-width: 100px
+			margin-bottom: 15px
+
+	

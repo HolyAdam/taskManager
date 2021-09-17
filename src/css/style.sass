@@ -1,0 +1,71 @@
+@import 'vars'
+
+*, *::after, *::before
+	box-sizing: border-box
+
+
+body
+	margin: 0
+	font-family: 'Roboto Slab', monospace, sans-serif
+	background-color: $bg
+	color: #fff
+
+main
+	padding-bottom: 60px
+
+.hide
+	display: none !important
+
+.deleted
+	text-decoration: line-through
+	cursor: text !important // important for joke xd
+
+.preloader-img
+	display: block
+
+
+
+.error
+	position: absolute
+	bottom: -18px
+	color: red
+	font-size: 12px
+	left: 50%
+	transform: translateX(-50%)
+	width: 100%
+	text-align: center
+
+.add
+	position: relative
+
+.container
+	max-width: 1200px
+	padding: 0 15px
+	margin: auto
+	&-fluid
+		max-width: 100%
+		padding: 0 5%
+		margin: auto
+
+#graphic
+	height: 100vh
+	position: fixed
+	top: 0
+	left: 0
+	bottom: 0
+	right: 0
+	z-index: 19
+
+@import 'start'
+@import 'login'
+@import 'scrollbar'
+@import 'menu'
+@import 'pop'
+@import 'header'
+@import 'title'
+@import 'create'
+@import 'project'
+@import 'liquid'
+@import 'add'
+@import 'charts'
+

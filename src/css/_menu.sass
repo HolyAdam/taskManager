@@ -1,0 +1,76 @@
+#menu
+	position: fixed
+	top: 0
+	left: 0
+	right: 0
+	bottom: 0
+	z-index: 5
+	margin: 0
+	padding: 0
+	opacity: 0
+	visibility: hidden
+	transition: opacity 0.4s ease-in-out
+	&.active
+		opacity: 1
+		visibility: visible
+
+	nav, ul
+		width: 100%
+		height: 100%
+	ul
+		padding: 0
+		margin: 0
+		list-style-type: none
+		display: flex
+		align-items: center
+		justify-content: center
+		background-color: rgba(#202122, 0.95)
+		flex-direction: column
+
+		li
+			margin: 12px 0
+			a
+				color: #fff
+				font-size: 20px
+				text-decoration: none
+				position: relative
+				&.active
+					color: $percent
+					&::after
+						background-color: $percent
+				&::after
+					content: ''
+					position: absolute
+					bottom: -2px
+					width: 0
+					height: 2px
+					background-color: #fff
+					left: 0
+					transition: width 0.25s ease-in-out
+				&:hover
+					&::after
+						width: 100%
+
+#closeMenu
+	position: absolute
+	top: 20px
+	right: 20px
+	z-index: 6
+	cursor: pointer
+	border: none
+	background-color: transparent
+	color: #fff
+	font-size: 40px
+	line-height: 0.8	
+
+
+
+@media (max-width: 625px)
+	#menu
+		ul
+
+			li
+				a
+					font-size: 16px
+	#closeMenu
+		font-size: 36px
