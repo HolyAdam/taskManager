@@ -60,9 +60,6 @@ export default class ProjectsComponent extends Component {
 
 }
 
-let i = 0;
-
-
 function render({ value, id, completed = false, author }) {
 
 	return `
@@ -81,7 +78,7 @@ function render({ value, id, completed = false, author }) {
 			    </label>
 			</div>
 			<span class="project-name ${completed ? 'deleted' : ''}">${value} <a href="#">by ${ author }</a></span>
-			<small class="project-users">Users: <small style="color: #36e199">${i++}</small></small>
+			<small class="project-users">Users: <small style="color: #36e199">${Math.floor((Math.random() * 100))}</small></small>
 		</div>
 	`
 
