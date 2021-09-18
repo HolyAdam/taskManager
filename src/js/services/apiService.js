@@ -19,11 +19,49 @@ class ApiService {
 
 	}
 
+
+	async fetchTodo(id) {
+
+		try {
+			const request = new Request(`${this.url}/tasks/${id}.json`)
+			const response = await fetch(request)
+
+			const data = await response.json()
+
+			return data
+		} catch(e) {
+			console.log(e)
+		}
+
+	}
+
 	async postTask(task) {
 
 		try {
 			const request = new Request(`${this.url}/tasks.json`, {
 				method: 'POST',
+				body: JSON.stringify(task),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			})
+			const response = await fetch(request)
+
+			const data = await response.json()
+
+			return data
+		} catch(e) {
+			console.log(e)
+		}
+
+	}
+
+
+	async updateTask(task, id) {
+
+		try {
+			const request = new Request(`${this.url}/tasks/${id}.json`, {
+				method: 'PUT',
 				body: JSON.stringify(task),
 				headers: {
 					'Content-Type': 'application/json'

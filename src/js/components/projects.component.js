@@ -79,45 +79,68 @@ function render({ value, id, completed = false, author }) {
 			    </label>
 			</div>
 			<span class="project-name ${completed ? 'deleted' : ''}">${value} <a href="#">by ${ author }</a></span>
-			<small class="project-users">Users: <span>${i++}</span></small>
+			<small class="project-users">Users: <small style="color: #36e199">${i++}</small></small>
 		</div>
 	`
 
 }
 
 
-function clickInputHandler(e) {
+async function clickInputHandler(e) {
 
 	const target = e.target
 
 	const myLink = target.tagName.toLowerCase() === 'span' || target.tagName.toLowerCase() === 'a'
 
 	if (myLink) {
-		const graphicHTML = renderGraphic()
+
+		const dataId = target.closest('.project-item').dataset.id
+		const infoAboutPost = await apiService.fetchTodo(dataId)
+
+		const graphicHTML = renderGraphic(infoAboutPost)
 		document.body.insertAdjacentHTML('beforeend', graphicHTML)
 		this.hide()
 
 		document.getElementById('graphicClose').addEventListener('click', () => {
 			document.getElementById('graphic').remove()
-			this.show()
+			this.show() // обращаемся к серверу
+			// this.$el.classList.remove('hide') // можем просто убрать hide без обращения
 		})
 
 	}
 
 	if (target.tagName.toLowerCase() === 'input') {
+		let id = 0
 
-		this.data = this.data.map(obj => {
-			if (target.closest('.project-item').dataset.id == obj.id) {
+		this.data = this.data.map((obj) => {
+			if (target.closest('.project-item').dataset.id == obj.id) {				
 				obj.completed = !obj.completed
+				id = obj.id
 			}
 
 			return obj
 		})
 
-		const newHtml = this.data.map(render).join('')
-		ProjectsComponent.childContainer.innerHTML = newHtml
+		this.loader.show()
+
+
+		console.log(this.data.find(obj => obj.id === id))
+
+		e.target.disabled = true
+
+		const info = await apiService.updateTask(this.data.find(obj => obj.id === id), id)
+
+		this.loader.hide()
+
+		this.data = this.data.slice(0, 40)
+
+		const html = this.data.map(render).join('')
+
+		ProjectsComponent.childContainer.innerHTML = html
 
 		activateTooltips()
+
+		console.log(this.data)
 
 	}
 }
@@ -155,7 +178,7 @@ function activateTooltips() {
 }
 
 
-function renderGraphic(obj) {
+function renderGraphic({ completed, value, date, author }) {
 
 	return `
 
@@ -166,7 +189,7 @@ function renderGraphic(obj) {
 				</button>
 				<h2 class="title">График</h2>
 				<span class="ended">
-					Не завершено || Завершено за 12 часов
+					${completed ? 'Завершено' : 'Не закончено'}
 				</span>
 				<table class="charts-css column show-labels show-data-on-hover show-data-axes show-primary-axis show-5-secondary-axes multiple stacked reverse-datasets" style="height:200px;">
 					<caption>House Spending by Countries</caption> 
@@ -180,21 +203,16 @@ function renderGraphic(obj) {
 					</thead> 
 					<tbody>
 						<tr>
-							<th style="flex-direction: row" scope="row">Сделать превью. Начало: <span style="display: inline-block; margin-left: 5px; color: #36e199"> 01.09.2021</span></th> 
+							<th style="flex-direction: row" scope="row">${value} Начало: <span style="display: inline-block; margin-left: 5px; color: #36e199"> ${date}</span></th> 
 							<td style="--size:0.2;"><span class="data" style="opacity: 1"> 20% Кирилл </span></td>
 							<td style="--size:0.2;"><span class="data" style="opacity: 1"> 20% Андрей </span></td>
 							<td style="--size:0.1;"><span class="data" style="opacity: 1"> 10% Антон </span></td>
 						</tr> 
-						<tr>
-							<th style="flex-direction: row" scope="row">Сделать таск 2. Начало: <span style="display: inline-block; margin-left: 5px; color: #36e199"> 01.09.2021</span></th> 
-							<td style="--size:0.2;"><span class="data"> 20% Кирилл </span></td>
-							<td style="--size:0.4;"><span class="data"> 40% Андрей </span></td>
-							<td style="--size:0.4;"><span class="data"> 40% Антон </span></td>
-						</tr>
 					</tbody>
 				</table>
 				<br>
 				<br>
+				<p>Автор: <span><strong> ${author}</strong></span></p>
 				<p>Задействованы в проекте: <span><strong>Кирилл </strong><strong>Андрей </strong><strong>Антон </strong></span></p>
 			</div>
 		</div>

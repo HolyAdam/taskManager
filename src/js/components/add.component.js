@@ -82,7 +82,7 @@ async function submitFormHandler(e) {
 
 		const data = {
 			value: this.state.value,
-			date: new Date(),
+			date: new Date().toLocaleString(),
 			author: localStorage.getItem('nickname')
 		}
 
