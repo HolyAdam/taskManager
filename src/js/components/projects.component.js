@@ -105,10 +105,16 @@ async function clickInputHandler(e) {
 		document.body.insertAdjacentHTML('beforeend', graphicHTML)
 		this.hide()
 
-		document.getElementById('graphicClose').addEventListener('click', () => {
-			document.getElementById('graphic').remove()
-			this.show() // обращаемся к серверу
-			// this.$el.classList.remove('hide') // можем просто убрать hide без обращения
+
+		// обработка бага когда нажимаем два раза подряд очень быстро по случайности
+		document.querySelectorAll('#graphicClose').forEach(close => {
+			close.addEventListener('click', () => {
+				document.querySelectorAll('#graphic').forEach(wind => {
+					wind.remove()
+				})
+				this.show() // обращаемся к серверу
+				// this.$el.classList.remove('hide') // можем просто убрать hide без обращения к серву
+			})
 		})
 
 	}
@@ -120,17 +126,17 @@ async function clickInputHandler(e) {
 			if (target.closest('.project-item').dataset.id == obj.id) {				
 				obj.completed = !obj.completed
 				id = obj.id
+				if (obj.completed) {
+					obj.ended = new Date().toLocaleString()
+				} else {
+					obj.ended = null
+				}
 			}
 
 			return obj
 		})
 
 		this.loader.show()
-
-
-		console.log(this.data.find(obj => obj.id === id))
-
-		e.target.disabled = true
 
 		const info = await apiService.updateTask(this.data.find(obj => obj.id === id), id)
 
@@ -182,7 +188,7 @@ function activateTooltips() {
 }
 
 
-function renderGraphic({ completed, value, date, author }) {
+function renderGraphic({ completed, value, date, author, ended }) {
 
 	return `
 
@@ -193,7 +199,7 @@ function renderGraphic({ completed, value, date, author }) {
 				</button>
 				<h2 class="title">График</h2>
 				<span class="ended">
-					${completed ? 'Завершено' : 'Не закончено'}
+					${completed ? 'Завершено' : 'Не закончено'}: <span class="pts">Начало ${date} ${ended ? `- Конец ${ended}` : ''}</span>
 				</span>
 				<table class="charts-css column show-labels show-data-on-hover show-data-axes show-primary-axis show-5-secondary-axes multiple stacked reverse-datasets" style="height:200px;">
 					<caption>House Spending by Countries</caption> 
@@ -207,7 +213,7 @@ function renderGraphic({ completed, value, date, author }) {
 					</thead> 
 					<tbody>
 						<tr>
-							<th style="flex-direction: row" scope="row">${value} Начало: <span style="display: inline-block; margin-left: 5px; color: #36e199"> ${date}</span></th> 
+							<th style="flex-direction: row" scope="row">${value}</th> 
 							<td style="--size:0.2;"><span class="data" style="opacity: 1"> 20% Кирилл </span></td>
 							<td style="--size:0.2;"><span class="data" style="opacity: 1"> 20% Андрей </span></td>
 							<td style="--size:0.1;"><span class="data" style="opacity: 1"> 10% Антон </span></td>
