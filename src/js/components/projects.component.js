@@ -21,6 +21,7 @@ export default class ProjectsComponent extends Component {
 
 	async onShow() {
 
+		ProjectsComponent.childContainer.classList.remove('active')
 		ProjectsComponent.childContainer.innerHTML = '' // удаляем контент при onShow, дабы при необходимости онли
 
 		document.querySelector('.create').style.display = 'block'
@@ -33,6 +34,7 @@ export default class ProjectsComponent extends Component {
 		console.log(data)
 
 		this.loader.hide()
+		ProjectsComponent.childContainer.classList.add('active')
 
 		if (!data || data === 'null') {
 

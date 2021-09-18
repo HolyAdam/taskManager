@@ -1,8 +1,8 @@
 .sect
-	margin-top: 65px
+	margin-top: 55px
 
 .project
-	&-items
+	&-items.active
 		max-height: 300px
 		min-height: 125px
 		overflow-y: scroll
@@ -48,6 +48,11 @@
 			font-size: 14px
 		&-users
 			font-size: 12px
+
+@media (max-width: 480px)
+	.project
+		&-items.active
+			max-height: 240px
 
 @media (max-width: 420px)
 	.project
