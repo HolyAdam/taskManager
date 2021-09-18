@@ -26,6 +26,8 @@ export default class MenuComponent extends Component {
 		dataLinks.forEach(link => {
 			link.addEventListener('click', e => {
 
+				e.preventDefault()
+
 
 				const dataLink = link.dataset.link
 

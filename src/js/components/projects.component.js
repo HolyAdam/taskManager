@@ -94,6 +94,8 @@ async function clickInputHandler(e) {
 
 	if (myLink) {
 
+		e.preventDefault()
+
 		const dataId = target.closest('.project-item').dataset.id
 		const infoAboutPost = await apiService.fetchTodo(dataId)
 
