@@ -35,6 +35,22 @@ class ApiService {
 
 	}
 
+
+	async getTasks() {
+
+		try {
+			const request = new Request(`https://jsonplaceholder.typicode.com/posts`)
+			const response = await fetch(request)
+
+			const data = await response.json()
+
+			return data
+		} catch(e) {
+			console.log(e)
+		}
+
+	}
+
 	async postTask(task) {
 
 		try {

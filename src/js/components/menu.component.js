@@ -37,6 +37,18 @@ export default class MenuComponent extends Component {
 						return
 					}
 
+					if (link.querySelector('.exit')) {
+
+						localStorage.clear()
+
+						setTimeout(() => {
+							location.reload()
+						}, 200)
+
+						return
+
+					}
+
 					dataLinks.forEach(link2 => link2.classList.remove('active'))
 					link.classList.add('active')
 
