@@ -36,15 +36,17 @@ class ApiService {
 	}
 
 
-	async getTasks() {
+	async getTasksInToDo(id) {
 
 		try {
-			const request = new Request(`https://jsonplaceholder.typicode.com/posts`)
+			const request = new Request(`${this.url}/tasks/${id}.json`)
 			const response = await fetch(request)
 
 			const data = await response.json()
 
-			return data
+			const tasks = data.tasks
+
+			return tasks
 		} catch(e) {
 			console.log(e)
 		}

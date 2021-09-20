@@ -116,8 +116,18 @@ async function clickInputHandler(e) {
 			tasksLink.onclick = async e => {
 				e.preventDefault()
 
-				this.tasks = await apiService.getTasks()
-				this.tasks = this.tasks.slice(0, 2)
+				const thisData = this.data
+
+				const myEl = this.data.find(item => item.id === dataId)
+				const id = myEl.id
+
+				this.tasks = myEl.tasks
+
+				if (this.tasks && this.tasks !== 'null') {
+					this.tasks = this.tasks.slice(0, 100) // поставим ограничение okey?
+				} else {
+					this.tasks = []
+				}
 				
 				const underTask = renderUnderTask(this.tasks)
 				document.querySelectorAll('#graphic').forEach(wind => {
@@ -126,20 +136,34 @@ async function clickInputHandler(e) {
 				document.body.insertAdjacentHTML('beforeend', underTask)
 
 				const dragAndDrop = () => {
+
+					const that = this
+
 					let activeCard = null
 					const cards = document.querySelectorAll('.js-dragelem')
 					const boxes = document.querySelectorAll('.under-wrapper')
 
+					// 1
 					const dragStart = (el) => {
 						setTimeout(() => {
 							el.classList.add('hide')
+							cards.forEach(card => {
+								card.style.position = 'relative'
+								card.style.zIndex = '-1'
+							})
 						}, 0)
 						activeCard = el
 					}
 
+					// 5
 					const dragEnd = (el) => {
 						el.classList.remove('hide')
 						activeCard = null
+
+						cards.forEach(card => {
+							card.style.position = ''
+							card.style.zIndex = ''
+						})
 
 					}
 
@@ -152,28 +176,93 @@ async function clickInputHandler(e) {
 						})
 					})
 
+					// 3
 					const dragOver = (e) => {
 						// console.log('over')
-
 						e.preventDefault()
 						// console.log(this)
 					}
 
+					// 2
 					const dragEnter = function(e) {
 						e.preventDefault()
 						this.classList.add('hovered')
 					}
 
 					const dragLeave = function() {
+
 						this.classList.remove('hovered')
+
 
 					}
 
-
-					const dragDrop = function(e) {
+					// 4
+					const dragDrop = async function(e) {
 						if (activeCard) {
+
 							this.prepend(activeCard)
 							this.classList.remove('hovered')
+
+							activeCard.classList.remove('wrapper-notbegin', 'wrapper-started', 'wrapper-ended')
+								
+							switch (e.target.id) {
+
+								case 'wrapper-notbegin':
+									that.tasks = that.tasks.map(task => {
+										if (task.title === activeCard.querySelector('h4').textContent.trim() 
+											&& task.body === activeCard.querySelector('p').textContent.trim()) {
+
+											task.ended = 'false'
+
+										}
+
+										return task	
+
+									})
+									activeCard.classList.add('wrapper-notbegin')
+									break;
+
+
+								case 'wrapper-started':
+									that.tasks = that.tasks.map(task => {
+										if (task.title === activeCard.querySelector('h4').textContent.trim() 
+											&& task.body === activeCard.querySelector('p').textContent.trim()) {
+
+											task.ended = 'start'
+
+										}
+
+										return task	
+
+									})
+									activeCard.classList.add('wrapper-started')
+									break;
+
+								case 'wrapper-ended':
+									that.tasks = that.tasks.map(task => {
+										if (task.title === activeCard.querySelector('h4').textContent.trim() 
+											&& task.body === activeCard.querySelector('p').textContent.trim()) {
+
+											task.ended = 'ended'
+
+										}
+
+										return task	
+									})
+									activeCard.classList.add('wrapper-ended')
+									break;
+
+							}
+
+							thisData.map(obj => {
+								if (obj.id === id) {
+									obj.tasks = that.tasks
+								}
+								return obj
+							})
+
+							apiService.updateTask(thisData.find(obj => obj.id === id), id)
+
 						}
 					}
 
@@ -185,6 +274,7 @@ async function clickInputHandler(e) {
 						box.addEventListener('dragleave', dragLeave)
 						box.addEventListener('drop', dragDrop)
 					})
+
 				}
 
 				dragAndDrop()
@@ -204,7 +294,7 @@ async function clickInputHandler(e) {
 
 					const form = document.querySelector('#undertaskform').querySelector('form')
 
-					document.querySelector('#undertaskform').querySelector('form').addEventListener('submit', e => {
+					document.querySelector('#undertaskform').querySelector('form').addEventListener('submit', async e => {
 						e.preventDefault()
 
 						const taskName = form.elements['name_task'].value.trim()
@@ -218,18 +308,28 @@ async function clickInputHandler(e) {
 
 						const obj = {
 							title: taskName,
-							body: descr
+							body: descr,
+							ended: 'false'
 						}
 
 						this.tasks.push(obj)
+						this.data.map(item => {
+							if (item.id === dataId) {
+								item.tasks = this.tasks
+							}
+							return item
+						})
 
-						document.querySelector('.under-wrapper').innerHTML = ''
+						document.querySelector('.undertaskform-btn').disabled = true
+						await apiService.updateTask(this.data.find(obj => obj.id === id), id)
 
-						const newUnderTask = renderBoxingTask(this.tasks)
+						document.querySelector('.undertaskform-btn').disabled = false
 
-						console.log(this.tasks)
+						document.querySelectorAll('.under-wrapper').forEach(wrapperok => {
+							wrapperok.innerHTML = ''
+						})
 
-						document.querySelector('.under-wrapper').insertAdjacentHTML('afterbegin', newUnderTask)
+						renderingSortTasks(this.tasks)
 
 						document.querySelectorAll('#undertaskform').forEach(underTask => {
 							underTask.remove()
@@ -452,7 +552,7 @@ function renderUnderTask(arr) {
 							</div>
 							<div class="under-naming">
 								<span class="under-naming__name">
-									Achek Slime
+									${localStorage.getItem('nickname')}
 								</span>
 								<small class="under-naming__surname">
 									Student
@@ -472,9 +572,10 @@ function renderUnderTask(arr) {
 						<h3 class="under-item__title">
 							Не начаты
 						</h3>
-						<div class="under-wrapper">
+						<div class="under-wrapper" id="wrapper-notbegin">
 							${arr.map(item => {
-								return `
+								return item.ended === 'false' ?	
+								 `
 									<div class="under-box js-dragelem" draggable="true">
 										<h4 class="under-item__name">
 											${item.title}
@@ -483,7 +584,7 @@ function renderUnderTask(arr) {
 											${item.body}
 										</p>
 									</div>
-								` 
+								` : ''
 							}).join('')}
 						</div>
 					</div>
@@ -491,16 +592,40 @@ function renderUnderTask(arr) {
 						<h3 class="under-item__title">
 							В разработке
 						</h3>
-						<div class="under-wrapper">
-							
+						<div class="under-wrapper" id="wrapper-started">
+							${arr.map(item => {
+								return item.ended === 'start' ?	
+								 `
+									<div class="under-box js-dragelem" draggable="true">
+										<h4 class="under-item__name">
+											${item.title}
+										</h4>
+										<p class="under-item__descr">
+											${item.body}
+										</p>
+									</div>
+								` : ''
+							}).join('')}
 						</div>
 					</div>
 					<div class="under-item under-item--ended">
 						<h3 class="under-item__title">
 							Завершены
 						</h3>
-						<div class="under-wrapper">
-							
+						<div class="under-wrapper" id="wrapper-ended">
+							${arr.map(item => {
+								return item.ended === 'ended' ?	
+								 `
+									<div class="under-box js-dragelem wrapper-ended" draggable="true">
+										<h4 class="under-item__name">
+											${item.title}
+										</h4>
+										<p class="under-item__descr">
+											${item.body}
+										</p>
+									</div>
+								` : ''
+							}).join('')}
 						</div>
 					</div>
 					<div class="under-create">
@@ -559,16 +684,16 @@ function renderUnderTaskForm() {
 }
 
 
-function renderTask(obj) {
+function renderTask(obj, ended = false) {
 
 	return `
 
-		<div class="under-box js-dragelem" draggable="true">
+		<div class="under-box js-dragelem ${ended ? 'wrapper-ended' : ''}" draggable="true">
 			<h4 class="under-item__name">
-				${obj.taskName}
+				${obj.title}
 			</h4>
 			<p class="under-item__descr">
-				${obj.descr}
+				${obj.body}
 			</p>
 		</div>
 
@@ -594,4 +719,23 @@ function renderBoxingTask(arr) {
 		}).join('')}
 
 	`
+}
+
+
+function renderingSortTasks(arr) {
+
+	arr.forEach(item => {
+		if (item.ended === 'false') {
+			document.querySelector('#wrapper-notbegin')
+				.insertAdjacentHTML('beforeend', renderTask(item))
+		} else if (item.ended === 'start') {
+			document.querySelector('#wrapper-started')
+				.insertAdjacentHTML('beforeend', renderTask(item))
+		} else if (item.ended === 'ended') {
+			document.querySelector('#wrapper-ended')
+				.insertAdjacentHTML('beforeend', renderTask(item, true))
+
+		}
+	})
+
 }
