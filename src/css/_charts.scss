@@ -17,6 +17,27 @@
 	padding-top: 25px;
 }
 
+#graphic .charts-css {
+	overflow-x: scroll;
+	padding-bottom: 30px;
+}
+
+#graphic .charts-css .dia {
+	min-width: 120px;
+
+}
+
+
+@media (max-width: 980px) {
+	#graphic .charts-css {
+		overflow-x: scroll;
+		padding-bottom: 30px;
+	}
+
+	#graphic .charts-css.column tbody {
+		
+	}
+}
 
 @media (max-width: 665px) {
 	#graphic .charts-css.show-data-on-hover .data, .charts-css.column:not(.reverse) tbody tr th {

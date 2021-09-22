@@ -3,6 +3,10 @@
 *, *::after, *::before
 	box-sizing: border-box
 
+::selection
+	background-color: #888
+	color: #fff
+
 
 body
 	margin: 0
@@ -35,6 +39,10 @@ main
 
 .lulz
 	background-color: $percent
+
+.ended
+	display: inline-block
+	margin-bottom: 15px
 .ended .pts
 	color: $percent
 
@@ -90,8 +98,26 @@ main
 #graphicClose
 	@extend #closeMenu
 
+#task-addTime
+	background-color: #000
+	color: #fff
+	text-align: center
+	max-width: 90px
+	padding: 5px
+	display: flex
+	justify-content: space-between
+	margin: auto
+	margin-bottom: 4px
+	border-radius: 4px
+	span
+		cursor: pointer
+		&:hover
+			color: $percent
+
+
 @import 'start'
 @import 'login'
+@import 'select'
 @import 'scrollbar'
 @import 'menu'
 @import 'pop'

@@ -174,6 +174,7 @@ async function clickInputHandler(e) {
 						card.addEventListener('dragend', () => {
 							dragEnd(card)
 						})
+
 					})
 
 					// 3
@@ -494,7 +495,7 @@ function renderGraphic({ completed, value, date, author, ended, contacts, tasks 
 									<th style="flex-direction: row" scope="row">${item.title}</th> 
 									${contacts.map(item2 => {
 										return `
-												<td style="--size:0.9;"><span class="data" style="opacity: 1"> ${item2} </span></td>
+												<td style="--size:${(1 / contacts.length).toFixed(2)};"><span class="data" style="opacity: 1"> ${item2} </span></td>
 										`
 									}).join('')}
 								</tr> 
@@ -503,7 +504,6 @@ function renderGraphic({ completed, value, date, author, ended, contacts, tasks 
 					</tbody>
 
 				</table>
-				<br>
 				<br>
 				<p>Автор: <span><strong> ${author}</strong></span></p>
 				<p>Задействованы в проекте: <span>${contacts.join(' ')}</span></p>
@@ -752,7 +752,7 @@ function renderNewGraphicTasks(tasks, contacts) {
 					<th style="flex-direction: row" scope="row">${item.title}</th> 
 					${contacts.map(name => {
 						return `
-								<td style="--size:0.2;"><span class="data" style="opacity: 1"> ${name} </span></td>
+								<td style="--size:${(1 / contacts.length).toFixed(2)};"><span class="data" style="opacity: 1"> ${name} </span></td>
 						`
 					}).join('')}
 				</tr> 

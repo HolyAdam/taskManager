@@ -1,0 +1,152 @@
+.select-box {
+  max-width: 600px;
+  margin: auto;
+  margin-top: 50px;
+  position: relative;
+}
+
+.select-wrapper {
+  width: 100%;
+}
+
+.select-pure__select {
+  @extend .add__input;
+  align-items: center;
+  background: #000;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  color: $percent;
+  cursor: pointer;
+  display: flex;
+  justify-content: left;
+  position: relative;
+  transition: 0.2s;
+  width: 100%;
+  min-height: 59px;
+}
+
+.select-pure__options {
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  color: #363b3e;
+  display: none;
+  left: 0;
+  max-height: 120px;
+  overflow-y: scroll;
+  position: absolute;
+  top: 62px;
+  width: 100%;
+  z-index: 5;
+}
+
+.select-pure__select--opened .select-pure__options {
+  display: block;
+  border-radius: 7px;
+
+}
+
+.select-pure__option {
+  background: #000;
+  border-bottom: 1px solid #e4e4e4;
+  box-sizing: border-box;
+  height: 44px;
+  line-height: 25px;
+  padding: 10px;
+  color: $percent;
+  font-size: 16px;
+  transition: all 0.1s linear;
+}
+
+.select-pure__option:hover {
+  background-color: #111;
+}
+
+.select-pure__option:last-child {
+  border-bottom: none
+}
+
+.select-pure__option--selected {
+  color: #444;
+  cursor: initial;
+  pointer-events: none;
+}
+
+.select-pure__option--hidden {
+  display: none;
+}
+
+.select-pure__selected-label {
+  background: $percent;
+  border-radius: 5px;
+  color: #000;
+  cursor: initial;
+  display: inline-block;
+  font-size: 16px;
+  margin: 3px 0;
+  margin-right: 7px;
+  padding: 0px 7px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.select-pure__selected-label:last-of-type {
+  margin-right: 0;
+}
+
+.select-pure__selected-label i {
+  cursor: pointer;
+  display: inline-block;
+  margin-left: 7px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #000;
+  transition: 0.25s ease-in-out;
+  position: relative;
+}
+
+.select-pure__selected-label i::after {
+  content: '+';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  color: #fff;
+  font-family: serif;
+  font-size: 10px; 
+}
+
+
+.select-pure__selected-label i:hover {
+  background-color: #444;
+}
+
+@media (max-width: 480px) {
+  .select-pure__select {
+    min-height: 57px;
+  }
+
+  .select-pure__selected-label, .select-pure__option {
+    font-size: 14px;
+  }
+  .select-pure__options {
+    max-height: 95px
+  }
+  .select-pure__option {
+    height: 40px;
+    line-height: 21px;
+  }
+}
+
+
+
+.contact-add {
+  position: absolute;
+  left: 0;
+  top: -20px;
+  font-size: 12px;
+  color: #999;
+  z-index: 3;
+}

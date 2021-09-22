@@ -5,7 +5,8 @@
 	width: 100%
 	min-height: 100%
 	z-index: 39
-	background-color: #202122	
+	background-color: #202122
+	padding-bottom: 20px	
 	&-create
 		display: block
 	&-items
@@ -73,3 +74,13 @@
 	button
 		font-family: inherit
 
+
+
+@media (max-width: 825px)
+	.under
+		&-items
+			flex-wrap: nowrap
+			overflow-x: scroll
+		&-item
+			flex-basis: auto
+			min-width: 264px
