@@ -61,7 +61,7 @@ export default class ProjectsComponent extends Component {
 
 }
 
-function render({ value, id, completed = false, author }) {
+function render({ value, id, completed = false, author, contacts }) {
 
 	return `
 		<div class="project-item" data-id="${id}">
@@ -79,7 +79,7 @@ function render({ value, id, completed = false, author }) {
 			    </label>
 			</div>
 			<span class="project-name ${completed ? 'deleted' : ''}">${value} <a href="#">by ${ author }</a></span>
-			<small class="project-users">Users: <small style="color: #36e199">${Math.floor((Math.random() * 100))}</small></small>
+			<small class="project-users">Users: <small style="color: #36e199">${contacts.length}</small></small>
 		</div>
 	`
 
@@ -129,7 +129,7 @@ async function clickInputHandler(e) {
 					this.tasks = []
 				}
 				
-				const underTask = renderUnderTask(this.tasks)
+				const underTask = renderUnderTask(this.tasks, myEl.value)
 				document.querySelectorAll('#graphic').forEach(wind => {
 					wind.classList.add('hide')
 				})
@@ -330,6 +330,8 @@ async function clickInputHandler(e) {
 						})
 
 						renderingSortTasks(this.tasks)
+						console.log(this.data)
+						document.querySelector('tbody').innerHTML = renderNewGraphicTasks(this.tasks, myEl.contacts)
 
 						document.querySelectorAll('#undertaskform').forEach(underTask => {
 							underTask.remove()
@@ -461,10 +463,11 @@ function activateTooltips() {
 }
 
 
-function renderGraphic({ completed, value, date, author, ended }) {
+function renderGraphic({ completed, value, date, author, ended, contacts, tasks }) {
+
+	console.log(tasks)
 
 	return `
-
 		<div id="graphic">
 			<div class="container">
 				<button id="graphicClose">
@@ -485,30 +488,25 @@ function renderGraphic({ completed, value, date, author, ended }) {
 						</tr>
 					</thead> 
 					<tbody>
-						<tr class="dia">
-							<th style="flex-direction: row" scope="row">${value}</th> 
-							<td style="--size:0.2;"><span class="data" style="opacity: 1"> 20% Кирилл </span></td>
-							<td style="--size:0.2;"><span class="data" style="opacity: 1"> 20% Андрей </span></td>
-							<td style="--size:0.1;"><span class="data" style="opacity: 1"> 10% Антон </span></td>
-						</tr> 
-						<tr class="dia">
-							<th style="flex-direction: row" scope="row">${value}</th> 
-							<td style="--size:0.2;"><span class="data" style="opacity: 1"> 20% Кирилл </span></td>
-							<td style="--size:0.2;"><span class="data" style="opacity: 1"> 20% Андрей </span></td>
-							<td style="--size:0.1;"><span class="data" style="opacity: 1"> 10% Антон </span></td>
-						</tr>
-						<tr class="dia">
-							<th style="flex-direction: row" scope="row">${value}</th> 
-							<td style="--size:0.2;"><span class="data" style="opacity: 1"> 20% Кирилл </span></td>
-							<td style="--size:0.2;"><span class="data" style="opacity: 1"> 20% Андрей </span></td>
-							<td style="--size:0.1;"><span class="data" style="opacity: 1"> 10% Антон </span></td>
-						</tr>
+						${typeof(tasks) !== 'string' ? tasks.map(item => {
+							return `
+								<tr class="dia">
+									<th style="flex-direction: row" scope="row">${item.title}</th> 
+									${contacts.map(item2 => {
+										return `
+												<td style="--size:0.9;"><span class="data" style="opacity: 1"> ${item2} </span></td>
+										`
+									}).join('')}
+								</tr> 
+							`
+						}).join('') : ''}
 					</tbody>
+
 				</table>
 				<br>
 				<br>
 				<p>Автор: <span><strong> ${author}</strong></span></p>
-				<p>Задействованы в проекте: <span><strong>Кирилл </strong><strong>Андрей </strong><strong>Антон </strong></span></p>
+				<p>Задействованы в проекте: <span>${contacts.join(' ')}</span></p>
 				<button class="btn graphic-btn" id="tasksLink">
 						
 						<span>Посмотреть задачи</span>
@@ -536,7 +534,7 @@ function renderGraphic({ completed, value, date, author, ended }) {
 }
 
 
-function renderUnderTask(arr) {
+function renderUnderTask(arr, title) {
 	return `
 
 		<div class="under" id="under">
@@ -564,7 +562,7 @@ function renderUnderTask(arr) {
 			</div>
 			<div class="container sect">
 				<h2 class="title under-title">
-					Название проекта
+					${title}
 				</h2>
 					
 				<div class="under-items">
@@ -652,31 +650,33 @@ function renderUnderTaskForm() {
 			<div class="undertaskform-close">
 				&times;
 			</div>
-			<form>
-				<h3 class="title">Добавить таск</h3>
-				<input type="text" require minlength="3" placeholder="task name" name="name_task">
-				<textarea placeholder="description" name="descr"></textarea>
-				<button class="btn undertaskform-btn">
-						
-						<span>Добавить</span>
-						<svg preserveAspectRatio="none" viewBox="0 0 132 45">
-						    <g clip-path="url(#clip)" filter="url(#goo-big1)">
-						        <circle class="top-left" cx="49.5" cy="-0.5" r="26.5" />
-						        <circle class="middle-bottom" cx="70.5" cy="40.5" r="26.5" />
-						        <circle class="top-right" cx="104" cy="6.5" r="27" />
-						        <circle class="right-bottom" cx="123.5" cy="36.5" r="26.5" />
-						        <circle class="left-bottom" cx="16.5" cy="28" r="30" />
-						    </g>
-						    <defs>
-						        <clipPath id="clip">
-						            <rect width="132" height="45" rx="7" />
-						        </clipPath>
-						    </defs>
-						</svg>
+			<div class="container">
+				<form>
+					<h3 class="title">Добавить таск</h3>
+					<input type="text" require minlength="3" placeholder="task name" name="name_task">
+					<textarea placeholder="description" name="descr"></textarea>
+					<button class="btn undertaskform-btn">
+							
+							<span>Добавить</span>
+							<svg preserveAspectRatio="none" viewBox="0 0 132 45">
+							    <g clip-path="url(#clip)" filter="url(#goo-big1)">
+							        <circle class="top-left" cx="49.5" cy="-0.5" r="26.5" />
+							        <circle class="middle-bottom" cx="70.5" cy="40.5" r="26.5" />
+							        <circle class="top-right" cx="104" cy="6.5" r="27" />
+							        <circle class="right-bottom" cx="123.5" cy="36.5" r="26.5" />
+							        <circle class="left-bottom" cx="16.5" cy="28" r="30" />
+							    </g>
+							    <defs>
+							        <clipPath id="clip">
+							            <rect width="132" height="45" rx="7" />
+							        </clipPath>
+							    </defs>
+							</svg>
 
-				</button>
+					</button>
 
-			</form>
+				</form>
+			</div>
 		</div>
 
 	`
@@ -738,4 +738,26 @@ function renderingSortTasks(arr) {
 		}
 	})
 
+}
+
+
+function renderNewGraphicTasks(tasks, contacts) {
+
+	console.log(tasks)
+
+	return `
+		${typeof(tasks) !== 'string' ? tasks.map(item => {
+			return `
+				<tr class="dia">
+					<th style="flex-direction: row" scope="row">${item.title}</th> 
+					${contacts.map(name => {
+						return `
+								<td style="--size:0.2;"><span class="data" style="opacity: 1"> ${name} </span></td>
+						`
+					}).join('')}
+				</tr> 
+			`
+		}).join('') : ''}
+
+	`
 }

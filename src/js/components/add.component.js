@@ -1,5 +1,6 @@
 import Component from './Component'
 import apiService from '../services/apiService'
+import SelectPure from '../library/multiselect'
 
 export default class AddComponent extends Component {
 
@@ -11,10 +12,60 @@ export default class AddComponent extends Component {
 
 	init() {
 
+		const myOptions = [
+		  {
+		    label: "Александр",
+		    value: "Alex",
+		  },
+		  {
+		    label: "Ксюша",
+		    value: "Ksu",
+		  },
+		  {
+		    label: "Саня",
+		    value: "Sanya",
+		  },
+		  {
+		    label: "Бездарь",
+		    value: "Bzdar",
+		  }
+		]
+
 		this.state = {
 			valid: null,
 			errors: new Set(),
 		}
+
+		this.contacts = ["Alex"]
+
+		const instance = new SelectPure("#select", {
+		    options: myOptions,
+		    multiple: true,
+		    value: ["Alex"],
+		    onChange: value => {
+		    	this.contacts = []
+		    	this.$el.querySelector('button').disabled = !(value.length && this.state.valid)
+		    	for (const contact of value) {
+		    		this.contacts.push(contact)
+		    	} 
+		    	console.log(this.contacts)
+		    },
+			classNames: {
+			      select: "select-pure__select",
+			      dropdownShown: "select-pure__select--opened",
+			      multiselect: "select-pure__select--multiple",
+			      label: "select-pure__label",
+			      placeholder: "select-pure__placeholder",
+			      dropdown: "select-pure__options",
+			      option: "select-pure__option",
+			      autocompleteInput: "select-pure__autocomplete",
+			      selectedLabel: "select-pure__selected-label",
+			      selectedOption: "select-pure__option--selected",
+			      placeholderHidden: "select-pure__placeholder--hidden",
+			      optionHidden: "select-pure__option--hidden",
+			    }
+		});
+
 
 		this.$el.querySelector('input').addEventListener('input', addInputHandler.bind(this))
 		this.$el.querySelector('input').addEventListener('focus', removeErrors.bind(this, true))
@@ -84,7 +135,8 @@ async function submitFormHandler(e) {
 			value: this.state.value,
 			date: new Date().toLocaleString(),
 			author: localStorage.getItem('nickname'),
-			tasks: 'null'
+			tasks: 'null',
+			contacts: this.contacts
 		}
 
 		this.$el.querySelector('input').value = ''
