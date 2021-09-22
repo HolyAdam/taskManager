@@ -553,7 +553,7 @@ function renderUnderTask(arr, title) {
 									${localStorage.getItem('nickname')}
 								</span>
 								<small class="under-naming__surname">
-									Student
+									Студент
 								</small>
 							</div>
 						</div>
@@ -653,8 +653,8 @@ function renderUnderTaskForm() {
 			<div class="container">
 				<form>
 					<h3 class="title">Добавить таск</h3>
-					<input type="text" require minlength="3" placeholder="task name" name="name_task">
-					<textarea placeholder="description" name="descr"></textarea>
+					<input type="text" require minlength="3" placeholder="Название таска" name="name_task">
+					<textarea placeholder="Описание таска" name="descr"></textarea>
 					<button class="btn undertaskform-btn">
 							
 							<span>Добавить</span>
