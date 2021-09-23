@@ -30,6 +30,7 @@ export default class AddComponent extends Component {
 		this.state = {
 			valid: null,
 			errors: new Set(),
+			value: ''
 		}
 
 		this.contacts = ["Adam"]
@@ -41,6 +42,16 @@ export default class AddComponent extends Component {
 		    onChange: value => {
 		    	this.contacts = []
 		    	this.$el.querySelector('button').disabled = !(value.length && this.state.valid)
+		    	if (value.length && this.state.value.match(/[А-ЯёA-F]+/ig) && 
+		    		this.state.value.trim().length > 3) {
+		    		document.querySelectorAll('.error').forEach(error => error.remove())	
+
+		    		document.querySelector('.add .add__input').style.border = ''
+		    		this.$el.querySelector('button').disabled = false
+		    		this.state.valid = true
+		    		this.state.errors = new Set()
+
+		    	}
 		    	for (const contact of value) {
 		    		this.contacts.push(contact)
 		    	} 

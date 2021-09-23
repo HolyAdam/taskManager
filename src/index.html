@@ -42,42 +42,13 @@
 
 	<div class="login hide" id="login">
 		<form>
-			<h3 class="form-title">
+			<h3 class="title">
 				Вход
 			</h3>
-		  <svg width="200px" height="200px" viewBox="0 0 200 200" aria-labelledby="svg-title svg-desc">
-		    <title id="svg-title">Smile</title>
-		    <desc id="svg-desc">Smiling</desc>
-		    <style type="text/css">
-		      @keyframes float { 
-		        from { transform: translate(0, 0px); }
-		        to   { transform: translate(0, 8px); } 
-		      }
-		      @keyframes float-arm { 
-		        from { transform: translate(-1px, 0px); }
-		        to   { transform: translate(1px, 4px); } 
-		      }
-		      #ghost-body { animation: float 2s linear alternate infinite; }
-		      .ghost-arm { animation: float-arm 3s linear alternate infinite; }
-		      .pupil, #mouth, .ghost-arm { transition: all 0.25s; }
-		    </style>
-		    <g id="ghost-body" fill="#36e199" stroke="#fff" stroke-width="3" stroke-linejoin="round">
-		     
-		      <circle cx="102" cy="100" r="80" fill="#36e199"></circle>
-		      <path id="eye-right" class="eye" fill="#36e199" d="M 69,71 C 69,64 73,54 84,55 96,56 100,62 100,70 100,79 89,83 84,83 78,83 69,80 69,71 Z" />
-		      <path id="eye-left" class="eye" fill="#36e199" d="M 105,73 C 104,66 108,57 120,57 130,57 134,65 134,71 134,80 125,85 119,85 114,85 105,82 105,73 Z" />
-		      <circle id="pupil-right" class="pupil" cx="84" cy="69" r="3" fill="rgba(0,0,0,1)" />
-		      <circle id="pupil-left" class="pupil" cx="120" cy="71" r="3" fill="rgba(0,0,0,1)" />
-		      <path id="mouth" d="M 75,115 C 79,120 91,126 101,125 110,125 126,118 127,114 125,117 117,125 101,125 85,126 79,117 75,115 Z" fill="#000" stroke="#000" />
-		      <path id="ghost-arm-right" class="ghost-arm" d="M 45,89 C 25,92 9,108 11,124 13,141 27,115 48,119" />
-		      <path id="ghost-arm-left" class="ghost-arm" d="M 155,88 C 191,90 194,114 192,125 191,137 172,109 155,116" data-hover="M 155,88 C 145,68 105,51 103,62 102,74 123,117 155,116" style="animation-delay:-1s" />
-		    </g>
-		  </svg>
 		  <fieldset id="email-field" class="with-placeholder">
 		    <legend>Email</legend>
 		    <div>
 		      <input type="email" name="email" id="email"  autocomplete="off" autocorrect="off">
-		      <div class="placeholder">test123@yandex.ru</div>
 		    </div>
 		  </fieldset>
 		  <fieldset id="password-field">

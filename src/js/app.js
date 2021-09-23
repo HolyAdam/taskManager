@@ -1,5 +1,4 @@
 import './library/index.js'
-import './utils/login.js'
 import './utils/utils.js'
 import '../css/style.sass'
 

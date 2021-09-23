@@ -209,7 +209,11 @@ async function clickInputHandler(e) {
 							calcForm.addEventListener('submit', async e => {
 								e.preventDefault()
 
-								const getTaskHours = +myTask.calcNum || 0
+								let getTaskHours = 0
+
+								if (myTask[localStorage.getItem('nickname')]) {
+									getTaskHours = +myTask[localStorage.getItem('nickname')].calcNum
+								}
 
 								const calcStart = calcForm.elements['calc-start'].value.trim()
 								const calcEnd = calcForm.elements['calc-end'].value.trim()
@@ -224,10 +228,18 @@ async function clickInputHandler(e) {
 										name: localStorage.getItem('nickname')
 									}
 
-									for (const key in calcInfo) {
-										myTask[key] = calcInfo[key]
+									myTask[localStorage.getItem('nickname')] = {
+										...calcInfo
 									}
-									
+
+									if (!myTask.hasOwnProperty('allSum')) {
+										myTask['allSum'] = +calcForm.elements['calc-num'].value.trim()
+									} else {
+										myTask['allSum'] += +calcForm.elements['calc-num'].value.trim()
+
+									}
+
+
 									this.tasks = this.tasks.map(item => {
 										if (item.title === el.querySelector('h4').textContent.trim() 
 										&& item.body === el.querySelector('p').textContent.trim()) {
@@ -616,7 +628,10 @@ function renderGraphic({ completed, value, date, author, ended, contacts, tasks 
 																${item.calcNum ? item.calcNum : ' х'} ч.
 															</div>
 														` : ''}
-													<span id="graphic-hours">${item.calcNum ? item.calcNum : 'хз'} ч.</span>
+													<span id="graphic-hours">${item[localStorage.getItem('nickname')] ? 
+														item[localStorage.getItem('nickname')].calcNum 
+														: 'хз'} 
+													ч.</span>
 
 												<span class="data" style="opacity: 1"> ${item2} </span></td>
 										`
