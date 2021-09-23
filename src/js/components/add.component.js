@@ -14,20 +14,16 @@ export default class AddComponent extends Component {
 
 		const myOptions = [
 		  {
-		    label: "Александр",
-		    value: "Alex",
+		    label: "Adam",
+		    value: "Adam",
 		  },
 		  {
-		    label: "Ксюша",
-		    value: "Ksu",
+		    label: "Achek",
+		    value: "Achek",
 		  },
 		  {
-		    label: "Саня",
-		    value: "Sanya",
-		  },
-		  {
-		    label: "Бездарь",
-		    value: "Bzdar",
+		    label: "Misha",
+		    value: "Misha",
 		  }
 		]
 
@@ -36,12 +32,12 @@ export default class AddComponent extends Component {
 			errors: new Set(),
 		}
 
-		this.contacts = ["Alex"]
+		this.contacts = ["Adam"]
 
 		const instance = new SelectPure("#select", {
 		    options: myOptions,
 		    multiple: true,
-		    value: ["Alex"],
+		    value: ["Adam"],
 		    onChange: value => {
 		    	this.contacts = []
 		    	this.$el.querySelector('button').disabled = !(value.length && this.state.valid)

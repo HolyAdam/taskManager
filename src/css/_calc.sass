@@ -1,0 +1,47 @@
+#calc
+	text-align: center
+	@extend .under
+	.container
+		max-width: 600px
+		margin: auto
+	&-btn
+		margin-top: 25px
+		font-family: inherit
+	&-close
+		@extend #graphicClose
+	&-denied
+		margin-top: 40px
+		font-size: 24px
+
+	p
+		span
+			color: $percent
+		margin: 0
+
+.calc
+	&-input
+		display: block
+		text-align: left
+		margin: 15px 0
+		span
+			display: block
+			text-align: center
+			margin-bottom: 5px
+			font-size: 14px
+			color: #aaa
+		input
+			@extend .add__input
+
+		input[name="calc-num"]
+			&::-webkit-outer-spin-button, &::-webkit-inner-spin-button
+				-webkit-appearance: none
+				margin: 0
+		input[name="calc-start"], input[name="calc-end"] 
+			&::-webkit-calendar-picker-indicator
+				color: $percent
+				opacity: 1
+				background-color: $percent
+
+@media (max-width: 445px)
+	#calc-denied
+		font-size: 20px

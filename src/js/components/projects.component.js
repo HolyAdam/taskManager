@@ -167,6 +167,124 @@ async function clickInputHandler(e) {
 
 					}
 
+					const clickCard = (el) => {
+						const myTask = myEl.tasks.find(item => {
+							return item.title === el.querySelector('h4').textContent.trim() 
+							&& item.body === el.querySelector('p').textContent.trim()
+
+						})
+
+						document.querySelectorAll('.under').forEach(under => {
+							under.classList.add('hide')
+
+						})
+
+						document.body.insertAdjacentHTML('beforeend', renderCalc(myTask))
+
+						if (myTask.ended === 'start') {
+
+							const calcForm = document.querySelector('#calc-form');
+
+							['calcstart', 'calcend'].forEach((calcDate, i) => {
+								let today = new Date();
+								let dd = today.getDate();
+								let mm = today.getMonth()+1;
+								let yyyy = today.getFullYear();
+								 if(dd<10){
+								        dd='0'+dd
+								    } 
+								    if(mm<10){
+								        mm='0'+mm
+								    } 
+
+								today = yyyy+'-'+mm+'-'+dd;
+								if (i === 0) {
+									document.getElementById(calcDate).setAttribute("value", today);
+									document.getElementById(calcDate).setAttribute("disabled", true);
+								}
+								document.getElementById(calcDate).setAttribute("min", today);
+
+							})
+
+							calcForm.addEventListener('submit', async e => {
+								e.preventDefault()
+
+								const getTaskHours = +myTask.calcNum || 0
+
+								const calcStart = calcForm.elements['calc-start'].value.trim()
+								const calcEnd = calcForm.elements['calc-end'].value.trim()
+								const calcNum = +calcForm.elements['calc-num'].value.trim() + getTaskHours
+
+								if (calcStart && calcEnd && calcNum) {
+
+									const calcInfo = {
+										calcStart,
+										calcEnd,
+										calcNum,
+										name: localStorage.getItem('nickname')
+									}
+
+									for (const key in calcInfo) {
+										myTask[key] = calcInfo[key]
+									}
+									
+									this.tasks = this.tasks.map(item => {
+										if (item.title === el.querySelector('h4').textContent.trim() 
+										&& item.body === el.querySelector('p').textContent.trim()) {
+											item = myTask
+										}
+
+										return item
+									})
+
+
+									this.data.map(item => { // можно не присваивать тк возвращаем item
+															// и cb сам примет новое значение
+										if (item.id === id) {
+
+											item.tasks = this.tasks
+
+										}
+
+										return item
+
+									})
+
+									document.querySelector('tbody').innerHTML = renderNewGraphicTasks(this.tasks, myEl.contacts)
+
+									await apiService.updateTask(this.data.find(obj => obj.id === id), id)
+
+
+									document.querySelectorAll('#calc').forEach(calcWindow => {
+										calcWindow.remove()
+									})
+									document.querySelectorAll('.under').forEach(under => {
+										under.classList.remove('hide')
+									})
+
+
+								} else {
+									alert('Заполните все поля!')
+								}
+
+
+
+							})
+						}
+
+						document.querySelectorAll('#calc-close').forEach(calcClose => {
+							calcClose.onclick = () => {
+								document.querySelectorAll('#calc').forEach(calcWindow => {
+									calcWindow.remove()
+								})
+								document.querySelectorAll('.under').forEach(under => {
+									under.classList.remove('hide')
+								})
+							}
+						})
+
+					}
+
 					cards.forEach(card => {
 						card.addEventListener('dragstart', () => {
 							dragStart(card)
@@ -174,8 +292,13 @@ async function clickInputHandler(e) {
 						card.addEventListener('dragend', () => {
 							dragEnd(card)
 						})
+						card.addEventListener('click', () => {
+							clickCard(card)
+						})
 
 					})
+
+
 
 					// 3
 					const dragOver = (e) => {
@@ -262,7 +385,7 @@ async function clickInputHandler(e) {
 								return obj
 							})
 
-							apiService.updateTask(thisData.find(obj => obj.id === id), id)
+							apiService.updateTask(thisData.find(obj => obj.id === id), id) // без разницы когда
 
 						}
 					}
@@ -479,23 +602,23 @@ function renderGraphic({ completed, value, date, author, ended, contacts, tasks 
 					${completed ? 'Завершено' : 'Не закончено'}: <span class="pts">Начало ${date} ${ended ? `- Конец ${ended}` : ''}</span>
 				</span>
 				<table class="charts-css column show-labels show-data-on-hover data-spacing-20 show-primary-axis multiple stacked reverse-datasets" style="height:200px;">
-					<caption>House Spending by Countries</caption> 
-					<thead>
-						<tr>
-							<th>Country</th> 
-							<th>Rent</th> 
-							<th>Food</th> 
-							<th>Other</th>
-						</tr>
-					</thead> 
 					<tbody>
 						${typeof(tasks) !== 'string' ? tasks.map(item => {
 							return `
 								<tr class="dia">
-									<th style="flex-direction: row" scope="row">${item.title}</th> 
-									${contacts.map(item2 => {
+									<th style="flex-direction: row" scope="row">${item.title} 
+									</th> 
+									${contacts.map((item2, i) => {
 										return `
-												<td style="--size:${(1 / contacts.length).toFixed(2)};"><span class="data" style="opacity: 1"> ${item2} </span></td>
+												<td style="--size:${(1 / contacts.length).toFixed(2)};">
+													${i === 0 ? `
+															<div id="dia-allhours">
+																${item.calcNum ? item.calcNum : ' х'} ч.
+															</div>
+														` : ''}
+													<span id="graphic-hours">${item.calcNum ? item.calcNum : 'хз'} ч.</span>
+
+												<span class="data" style="opacity: 1"> ${item2} </span></td>
 										`
 									}).join('')}
 								</tr> 
@@ -743,16 +866,22 @@ function renderingSortTasks(arr) {
 
 function renderNewGraphicTasks(tasks, contacts) {
 
-	console.log(tasks)
-
 	return `
 		${typeof(tasks) !== 'string' ? tasks.map(item => {
 			return `
 				<tr class="dia">
 					<th style="flex-direction: row" scope="row">${item.title}</th> 
-					${contacts.map(name => {
+					${contacts.map((name, i) => {
 						return `
-								<td style="--size:${(1 / contacts.length).toFixed(2)};"><span class="data" style="opacity: 1"> ${name} </span></td>
+								<td style="--size:${(1 / contacts.length).toFixed(2)};">
+									${i === 0 ? `
+											<div id="dia-allhours">
+												${item.calcNum ? item.calcNum : ' х'} ч.
+											</div>
+										` : ''}
+									<span id="graphic-hours">${item.calcNum ? item.calcNum : 'хз'} ч.</span>
+									<span class="data" style="opacity: 1"> ${name} </span>
+								</td>
 						`
 					}).join('')}
 				</tr> 
@@ -760,4 +889,95 @@ function renderNewGraphicTasks(tasks, contacts) {
 		}).join('') : ''}
 
 	`
+}
+
+
+function renderCalc({ title, body, ended }) {
+
+	const status = ended === 'false' ? 'Не начата' : 
+		ended === 'start' ? 'В разработке' : 'Завершена'
+
+		if (status === 'Завершена') {
+			return `
+
+				<div id="calc">
+					<button id="calc-close">&times;</button>
+					<div class="container">
+						<h3 class="title">${title}</h3>
+						<p>Текст задачи: <span>${body}<span></p>
+						<p>Статус задачи: <span>${status}<span></p>
+						<div id="calc-denied">Нельзя править уже выполненные задачи</div>
+
+					</div>
+
+				</div>
+
+			`
+		}
+
+		if (status === 'Не начата') {
+			return `
+
+				<div id="calc">
+					<button id="calc-close">&times;</button>
+					<div class="container">
+						<h3 class="title">${title}</h3>
+						<p>Текст задачи: <span>${body}<span></p>
+						<p>Статус задачи: <span>${status}<span></p>
+						<div id="calc-denied">Нельзя править то, что вы не начали</div>
+
+					</div>
+
+				</div>
+
+			`
+		}
+
+	return `
+
+		<div id="calc">
+			<button id="calc-close">&times;</button>
+			<div class="container">
+				<h3 class="title">${title}</h3>
+				<p>Статус задачи: <span>${status}<span></p>
+				<form id="calc-form">
+					<div class="calc-input">
+						<span>Начало</span><input type="date" name="calc-start" id="calcstart" autocomplete="off">
+					</div>
+					<div class="calc-input">
+						<span>Конец</span><input type="date" name="calc-end" id="calcend" autocomplete="off">
+					</div>
+					<div class="calc-input">
+						<span>Часы</span><input type="number" name="calc-num" autocomplete="off">
+					</div>
+
+
+					<button class="btn" id="calc-btn">
+							
+							<span>Списать</span>
+							<svg preserveAspectRatio="none" viewBox="0 0 132 45">
+							    <g clip-path="url(#clip)" filter="url(#goo-big)">
+							        <circle class="top-left" cx="49.5" cy="-0.5" r="26.5" />
+							        <circle class="middle-bottom" cx="70.5" cy="40.5" r="26.5" />
+							        <circle class="top-right" cx="104" cy="6.5" r="27" />
+							        <circle class="right-bottom" cx="123.5" cy="36.5" r="26.5" />
+							        <circle class="left-bottom" cx="16.5" cy="28" r="30" />
+							    </g>
+							    <defs>
+							        <clipPath id="clip">
+							            <rect width="132" height="45" rx="7" />
+							        </clipPath>
+							    </defs>
+							</svg>
+
+					</button>
+
+				</form>
+
+			</div>
+
+		</div>
+
+	`
+
 }
