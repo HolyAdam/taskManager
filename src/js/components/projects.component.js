@@ -629,7 +629,7 @@ function renderGraphic({ completed, value, date, author, ended, contacts, tasks 
 				</table>
 				<br>
 				<p>Автор: <span><strong> ${author}</strong></span></p>
-				<p>Задействованы в проекте: <span>${contacts.join(' ')}</span></p>
+				<p>Задействованы в проекте: <span>${contacts.join(', ')}</span></p>
 				<button class="btn graphic-btn" id="tasksLink">
 						
 						<span>Посмотреть задачи</span>

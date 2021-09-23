@@ -87,12 +87,12 @@ function addInputHandler(e) {
 
 	this.state.value = target.value
 
-	if (target.value.match(/[А-ЯёA-F]+/ig) && target.value.trim().length > 3) {
+	if (target.value.match(/[А-ЯёA-F]+/ig) && target.value.trim().length > 3 && this.contacts.length) {
 		this.state.valid = true
 		this.state.errors = new Set()
 	} else {
 		this.state.valid = false
-		this.state.errors.add('Больше 3 символов и буквы с цифрами')
+		this.state.errors.add('Больше 3 символов и буквы с цифрами и c контактами')
 	}
 
 	this.$el.querySelector('button').disabled = !this.state.valid

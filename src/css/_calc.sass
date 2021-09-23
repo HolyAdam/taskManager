@@ -37,10 +37,9 @@
 				-webkit-appearance: none
 				margin: 0
 		input[name="calc-start"], input[name="calc-end"] 
-			&::-webkit-calendar-picker-indicator
-				color: $percent
-				opacity: 1
-				background-color: $percent
+			&::-webkit-calendar-picker-indicator, &::-webkit-inner-spin-button
+				-webkit-appearance: none
+				display: none
 
 @media (max-width: 445px)
 	#calc-denied
