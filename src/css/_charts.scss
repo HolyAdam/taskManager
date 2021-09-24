@@ -3,7 +3,7 @@
 #graphic .charts-css {
 	--color-1: rgba(54, 180, 123, 0.8);
 	--color-2: rgba(98, 250, 183, 0.8);
-	--color-3: rgba(30, 150, 93, 0.8);
+	--color-3: rgba(150, 150, 93, 0.8);
 	--secondary-axes-color: #aaa;
 	--data-axes-color: #aaa;
 	--primary-axis-color: #fff;
@@ -15,7 +15,7 @@
 
 
 #graphic .charts-css .dia {
-	min-width: 120px;
+	min-width: 210px;
 	position: relative;
 
 }
@@ -38,10 +38,10 @@
 	font-size: 12px;
 	color: #000;
 	position: absolute;
-	bottom: 1px;
+	top: -3px;
 	text-align: center;
-	left: 50%;
-	transform: translateX(-50%);
+	left: -15px;
+	color: #fff;
 
 }
 

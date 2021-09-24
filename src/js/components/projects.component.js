@@ -11,6 +11,13 @@ export default class ProjectsComponent extends Component {
 	}
 
 	static childContainer = document.querySelector('.project-items')
+	static colors = [
+	`rgba(54, 180, 123, 0.8);`,
+	`rgba(98, 250, 183, 0.8);`,
+	`rgba(150, 150, 93, 0.8);`,
+	`rgba(100,210,80,0.75)`,
+	`rgba(90,165,255,0.75);`
+	]
 
 	async init() {
 
@@ -467,7 +474,6 @@ async function clickInputHandler(e) {
 
 						renderingSortTasks(this.tasks)
 						console.log(this.data)
-						document.querySelector('tbody').innerHTML = renderNewGraphicTasks(this.tasks, myEl.contacts)
 
 						document.querySelectorAll('#undertaskform').forEach(underTask => {
 							underTask.remove()
@@ -601,7 +607,22 @@ function activateTooltips() {
 
 function renderGraphic({ completed, value, date, author, ended, contacts, tasks }) {
 
-	console.log(tasks)
+	const arr = []
+	let max = 1
+
+	if (tasks !== 'null') {
+
+		tasks.forEach(item => {
+			if (item.allSum) {
+				arr.push(item.allSum)
+			} else {
+				arr.push(1)
+			}
+		})
+
+		max = Math.max(...arr)
+	}
+
 
 	return `
 		<div id="graphic">
@@ -613,27 +634,37 @@ function renderGraphic({ completed, value, date, author, ended, contacts, tasks 
 				<span class="ended">
 					${completed ? 'Завершено' : 'Не закончено'}: <span class="pts">Начало ${date} ${ended ? `- Конец ${ended}` : ''}</span>
 				</span>
-				<table class="charts-css column show-labels show-data-on-hover data-spacing-20 show-primary-axis multiple stacked reverse-datasets" style="height:200px;">
+				<table class="charts-css column show-labels show-data-on-hover data-spacing-20 show-primary-axis multiple stacked reverse-datasets" style="height:250px;">
 					<tbody>
 						${typeof(tasks) !== 'string' ? tasks.map(item => {
 							return `
 								<tr class="dia">
 									<th style="flex-direction: row" scope="row">${item.title} 
 									</th> 
-									${contacts.map((item2, i) => {
+									${contacts.map((name, i) => {
+
 										return `
-												<td style="--size:${(1 / contacts.length).toFixed(2)};">
+												<td style="--size:${item['allSum'] ? 
+												((item['allSum'] / max) * (
+
+													item[name] ?
+														item[name].calcNum / item['allSum'] :
+														0
+
+													)).toFixed(2) 
+												: (1 / 6).toFixed(2)};">
+
 													${i === 0 ? `
 															<div id="dia-allhours">
-																${item.calcNum ? item.calcNum : ' х'} ч.
+																${item['allSum'] ? item['allSum'] : ' х'} ч.
 															</div>
 														` : ''}
-													<span id="graphic-hours">${item[localStorage.getItem('nickname')] ? 
-														item[localStorage.getItem('nickname')].calcNum 
-														: 'хз'} 
-													ч.</span>
+													<span id="graphic-hours">
 
-												<span class="data" style="opacity: 1"> ${item2} </span></td>
+														${item[name] ? item[name].calcNum : ' '}
+
+													</span>
+													<span class="data" style="opacity: 1"> </span>
 										`
 									}).join('')}
 								</tr> 
@@ -644,7 +675,12 @@ function renderGraphic({ completed, value, date, author, ended, contacts, tasks 
 				</table>
 				<br>
 				<p>Автор: <span><strong> ${author}</strong></span></p>
-				<p>Задействованы в проекте: <span>${contacts.join(', ')}</span></p>
+				<p>Задействованы в проекте (см. график): <span>${
+					contacts.map((item, i) => {
+						return `<span style="color: ${ProjectsComponent.colors[i]}">${item}</span>`
+					}).join(', ')
+
+				}</span></p>
 				<button class="btn graphic-btn" id="tasksLink">
 						
 						<span>Посмотреть задачи</span>
@@ -881,6 +917,22 @@ function renderingSortTasks(arr) {
 
 function renderNewGraphicTasks(tasks, contacts) {
 
+	const arr = []
+		let max = 1
+
+		if (tasks !== 'null') {
+
+			tasks.forEach(item => {
+				if (item.allSum) {
+					arr.push(item.allSum)
+				} else {
+					arr.push(1)
+				}
+			})
+
+			max = Math.max(...arr)
+		}
+
 	return `
 		${typeof(tasks) !== 'string' ? tasks.map(item => {
 			return `
@@ -888,14 +940,27 @@ function renderNewGraphicTasks(tasks, contacts) {
 					<th style="flex-direction: row" scope="row">${item.title}</th> 
 					${contacts.map((name, i) => {
 						return `
-								<td style="--size:${(1 / contacts.length).toFixed(2)};">
+								<td style="--size:${item['allSum'] ? 
+								((item['allSum'] / max) * (
+
+									item[name] ?
+										item[name].calcNum / item['allSum'] :
+										0
+
+									)).toFixed(2) 
+								: (1 / 6).toFixed(2)};">
+
 									${i === 0 ? `
 											<div id="dia-allhours">
-												${item.calcNum ? item.calcNum : ' х'} ч.
+												${item['allSum'] ? item['allSum'] : ' х'} ч.
 											</div>
 										` : ''}
-									<span id="graphic-hours">${item.calcNum ? item.calcNum : 'хз'} ч.</span>
-									<span class="data" style="opacity: 1"> ${name} </span>
+									<span id="graphic-hours">
+
+										${item[name] ? item[name].calcNum : ' '}
+
+									</span>
+									<span class="data" style="opacity: 1">  </span>
 								</td>
 						`
 					}).join('')}
