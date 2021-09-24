@@ -638,7 +638,7 @@ function renderGraphic({ completed, value, date, author, ended, contacts, tasks 
 					<tbody>
 						${typeof(tasks) !== 'string' ? tasks.map(item => {
 							return `
-								<tr class="dia">
+								${item['allSum'] ? `<tr class="dia">
 									<th style="flex-direction: row" scope="row">${item.title} 
 									</th> 
 									${contacts.map((name, i) => {
@@ -667,7 +667,8 @@ function renderGraphic({ completed, value, date, author, ended, contacts, tasks 
 													<span class="data" style="opacity: 1"> </span>
 										`
 									}).join('')}
-								</tr> 
+								</tr>` : ''}
+								
 							`
 						}).join('') : ''}
 					</tbody>
@@ -936,35 +937,40 @@ function renderNewGraphicTasks(tasks, contacts) {
 	return `
 		${typeof(tasks) !== 'string' ? tasks.map(item => {
 			return `
-				<tr class="dia">
-					<th style="flex-direction: row" scope="row">${item.title}</th> 
-					${contacts.map((name, i) => {
-						return `
-								<td style="--size:${item['allSum'] ? 
-								((item['allSum'] / max) * (
+				${item['allSum'] ? `
 
-									item[name] ?
-										item[name].calcNum / item['allSum'] :
-										0
+					<tr class="dia">
+						<th style="flex-direction: row" scope="row">${item.title}</th> 
+						${contacts.map((name, i) => {
+							return `
+									<td style="--size:${item['allSum'] ? 
+									((item['allSum'] / max) * (
 
-									)).toFixed(2) 
-								: (1 / 6).toFixed(2)};">
+										item[name] ?
+											item[name].calcNum / item['allSum'] :
+											0
 
-									${i === 0 ? `
-											<div id="dia-allhours">
-												${item['allSum'] ? item['allSum'] : ' х'} ч.
-											</div>
-										` : ''}
-									<span id="graphic-hours">
+										)).toFixed(2) 
+									: (1 / 6).toFixed(2)};">
 
-										${item[name] ? item[name].calcNum : ' '}
+										${i === 0 ? `
+												<div id="dia-allhours">
+													${item['allSum'] ? item['allSum'] : ' х'} ч.
+												</div>
+											` : ''}
+										<span id="graphic-hours">
 
-									</span>
-									<span class="data" style="opacity: 1">  </span>
-								</td>
-						`
-					}).join('')}
-				</tr> 
+											${item[name] ? item[name].calcNum : ' '}
+
+										</span>
+										<span class="data" style="opacity: 1">  </span>
+									</td>
+							`
+						}).join('')}
+					</tr> 
+
+				` : ''}
+
 			`
 		}).join('') : ''}
 
