@@ -444,12 +444,12 @@ async function clickInputHandler(e) {
 						}
 					})
 
-					let infoContacts = ["adam"]
+					let infoContacts = [renderTaskOptions[0].value]
 
 					const instance2 = new SelectPure("#renderTaskSelect", {
 					    options: renderTaskOptions,
 					    multiple: true,
-					    value: ["adam"],
+					    value: [renderTaskOptions[0].value],
 					    onChange: value => {
 					    	form.querySelector('button').disabled = !value.length
 					    	infoContacts = value

@@ -14,16 +14,20 @@ export default class AddComponent extends Component {
 
 		const myOptions = [
 		  {
-		    label: "Adam",
+		    label: "adam",
 		    value: "adam",
 		  },
 		  {
-		    label: "Achek",
+		    label: "achek_slime",
 		    value: "achek_slime",
 		  },
 		  {
-		    label: "Misha",
+		    label: "misha1337",
 		    value: "misha1337",
+		  },
+		  {
+		    label: "maksemenovv",
+		    value: "maksemenovv",
 		  }
 		]
 
