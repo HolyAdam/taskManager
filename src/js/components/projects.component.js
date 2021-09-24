@@ -1,6 +1,7 @@
 import Component from './component'
 import apiService from '../services/apiService'
 import toArray from '../utils/toArray'
+import SelectPure from '../library/multiselect'
 
 export default class ProjectsComponent extends Component {
 
@@ -38,7 +39,6 @@ export default class ProjectsComponent extends Component {
 		let data = await apiService.fetchTodos()
 
 		data = toArray.giveMeArray(data)
-		console.log(data)
 
 		this.loader.hide()
 
@@ -437,6 +437,39 @@ async function clickInputHandler(e) {
 
 					const form = document.querySelector('#undertaskform').querySelector('form')
 
+					const renderTaskOptions = myEl.contacts.map(item => {
+						return {
+							label: item,
+							value: item
+						}
+					})
+
+					let infoContacts = ["adam"]
+
+					const instance2 = new SelectPure("#renderTaskSelect", {
+					    options: renderTaskOptions,
+					    multiple: true,
+					    value: ["adam"],
+					    onChange: value => {
+					    	form.querySelector('button').disabled = !value.length
+					    	infoContacts = value
+					    },
+						classNames: {
+						      select: "select-pure__select",
+						      dropdownShown: "select-pure__select--opened",
+						      multiselect: "select-pure__select--multiple",
+						      label: "select-pure__label",
+						      placeholder: "select-pure__placeholder",
+						      dropdown: "select-pure__options",
+						      option: "select-pure__option",
+						      autocompleteInput: "select-pure__autocomplete",
+						      selectedLabel: "select-pure__selected-label",
+						      selectedOption: "select-pure__option--selected",
+						      placeholderHidden: "select-pure__placeholder--hidden",
+						      optionHidden: "select-pure__option--hidden",
+						    }
+					});
+
 					document.querySelector('#undertaskform').querySelector('form').addEventListener('submit', async e => {
 						e.preventDefault()
 
@@ -453,7 +486,8 @@ async function clickInputHandler(e) {
 							title: taskName,
 							body: descr,
 							ended: 'false',
-							byUser: localStorage.getItem('nickname')
+							byUser: localStorage.getItem('nickname'),
+							toContacts: infoContacts
 						}
 
 						this.tasks.push(obj)
@@ -474,7 +508,6 @@ async function clickInputHandler(e) {
 						})
 
 						renderingSortTasks(this.tasks)
-						console.log(this.data)
 
 						document.querySelectorAll('#undertaskform').forEach(underTask => {
 							underTask.remove()
@@ -831,6 +864,7 @@ function renderUnderTaskForm() {
 					<h3 class="title">Добавить таск</h3>
 					<input type="text" require minlength="3" placeholder="Название таска" name="name_task">
 					<textarea placeholder="Описание таска" name="descr"></textarea>
+						<div id="renderTaskSelect"></div>
 					<button class="btn undertaskform-btn">
 							
 							<span>Добавить</span>
@@ -979,7 +1013,7 @@ function renderNewGraphicTasks(tasks, contacts) {
 }
 
 
-function renderCalc({ title, body, ended, byUser = 'author' }) {
+function renderCalc({ title, body, ended, byUser = 'author', toContacts = [] }) {
 
 	const status = ended === 'false' ? 'Не начата' : 
 		ended === 'start' ? 'В разработке' : 'Завершена'
@@ -992,6 +1026,7 @@ function renderCalc({ title, body, ended, byUser = 'author' }) {
 					<div class="container">
 						<h3 class="title">${title}</h3>
 						<p>Автор: <span>${byUser}<span></p>
+						<p>Исполнители: <span>${toContacts.join(', ')}<span></p>
 						<p>Текст задачи: <span>${body}<span></p>
 						<p>Статус задачи: <span>${status}<span></p>
 						<div id="calc-denied">Нельзя править уже выполненные задачи</div>
@@ -1011,6 +1046,7 @@ function renderCalc({ title, body, ended, byUser = 'author' }) {
 					<div class="container">
 						<h3 class="title">${title}</h3>
 						<p>Автор: <span>${byUser}<span></p>
+						<p>Исполнители: <span>${toContacts.join(', ')}<span></p>
 						<p>Текст задачи: <span>${body}<span></p>
 						<p>Статус задачи: <span>${status}<span></p>
 						<div id="calc-denied">Нельзя править то, что вы не начали</div>
@@ -1029,6 +1065,7 @@ function renderCalc({ title, body, ended, byUser = 'author' }) {
 			<div class="container">
 				<h3 class="title">${title}</h3>
 				<p>Автор: <span>${byUser}<span></p>
+				<p>Исполнители: <span>${toContacts.join(', ')}<span></p>
 				<p>Статус задачи: <span>${status}<span></p>
 				<form id="calc-form">
 					<div class="calc-input">
