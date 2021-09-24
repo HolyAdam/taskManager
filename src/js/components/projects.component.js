@@ -729,7 +729,7 @@ function renderUnderTask(arr, title) {
 									${localStorage.getItem('nickname')}
 								</span>
 								<small class="under-naming__surname">
-									Студент
+									
 								</small>
 							</div>
 						</div>
