@@ -452,7 +452,8 @@ async function clickInputHandler(e) {
 						const obj = {
 							title: taskName,
 							body: descr,
-							ended: 'false'
+							ended: 'false',
+							byUser: localStorage.getItem('nickname')
 						}
 
 						this.tasks.push(obj)
@@ -978,7 +979,7 @@ function renderNewGraphicTasks(tasks, contacts) {
 }
 
 
-function renderCalc({ title, body, ended }) {
+function renderCalc({ title, body, ended, byUser = 'author' }) {
 
 	const status = ended === 'false' ? 'Не начата' : 
 		ended === 'start' ? 'В разработке' : 'Завершена'
@@ -990,6 +991,7 @@ function renderCalc({ title, body, ended }) {
 					<button id="calc-close">&times;</button>
 					<div class="container">
 						<h3 class="title">${title}</h3>
+						<p>Автор: <span>${byUser}<span></p>
 						<p>Текст задачи: <span>${body}<span></p>
 						<p>Статус задачи: <span>${status}<span></p>
 						<div id="calc-denied">Нельзя править уже выполненные задачи</div>
@@ -1008,6 +1010,7 @@ function renderCalc({ title, body, ended }) {
 					<button id="calc-close">&times;</button>
 					<div class="container">
 						<h3 class="title">${title}</h3>
+						<p>Автор: <span>${byUser}<span></p>
 						<p>Текст задачи: <span>${body}<span></p>
 						<p>Статус задачи: <span>${status}<span></p>
 						<div id="calc-denied">Нельзя править то, что вы не начали</div>
@@ -1025,6 +1028,7 @@ function renderCalc({ title, body, ended }) {
 			<button id="calc-close">&times;</button>
 			<div class="container">
 				<h3 class="title">${title}</h3>
+				<p>Автор: <span>${byUser}<span></p>
 				<p>Статус задачи: <span>${status}<span></p>
 				<form id="calc-form">
 					<div class="calc-input">
