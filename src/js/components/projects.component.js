@@ -68,27 +68,31 @@ export default class ProjectsComponent extends Component {
 
 }
 
-function render({ value, id, completed = false, author, contacts }) {
+function render({ value, id, completed = false, author, contacts = [] }) {
 
-	return `
-		<div class="project-item" data-id="${id}">
-			<div class="tooltip" role="tooltip">${completed ? 'Выполнено' : 'В процессе'}
-			<div class="arrow" data-popper-arrow></div>
+	if (contacts.includes(localStorage.getItem('nickname'))) {
+		return `
+			<div class="project-item" data-id="${id}" data-contacts="${contacts.join(', ')}">
+				<div class="tooltip" role="tooltip">${completed ? 'Выполнено' : 'В процессе'}
+				<div class="arrow" data-popper-arrow></div>
+				</div>
+				<div class="input project-input popcorn" aria-describedby="tooltip">
+					<label class="checkbox">
+				        <input type="checkbox" ${completed ? 'checked' : ''}>
+				        <svg viewBox="0 0 24 24" filter="url(#goo-light)">
+				            <path class="tick" d="M4.5 10L10.5 16L24.5 1" />
+				            <circle class="dot" cx="10.5" cy="15.5" r="1.5" />
+				            <circle class="drop" cx="25" cy="-1" r="2" />
+				        </svg>
+				    </label>
+				</div>
+				<span class="project-name ${completed ? 'deleted' : ''}">${value} <a href="#">by ${ author }</a></span>
+				<small class="project-users">Users: <small style="color: #36e199">${contacts.length}</small></small>
 			</div>
-			<div class="input project-input popcorn" aria-describedby="tooltip">
-				<label class="checkbox">
-			        <input type="checkbox" ${completed ? 'checked' : ''}>
-			        <svg viewBox="0 0 24 24" filter="url(#goo-light)">
-			            <path class="tick" d="M4.5 10L10.5 16L24.5 1" />
-			            <circle class="dot" cx="10.5" cy="15.5" r="1.5" />
-			            <circle class="drop" cx="25" cy="-1" r="2" />
-			        </svg>
-			    </label>
-			</div>
-			<span class="project-name ${completed ? 'deleted' : ''}">${value} <a href="#">by ${ author }</a></span>
-			<small class="project-users">Users: <small style="color: #36e199">${contacts.length}</small></small>
-		</div>
-	`
+		`
+	}
+
+	return ''
 
 }
 
@@ -208,8 +212,9 @@ async function clickInputHandler(e) {
 								if (i === 0) {
 									document.getElementById(calcDate).setAttribute("value", today);
 									document.getElementById(calcDate).setAttribute("disabled", true);
+								} else {
+									document.getElementById(calcDate).setAttribute("min", today);
 								}
-								document.getElementById(calcDate).setAttribute("min", today);
 
 							})
 
