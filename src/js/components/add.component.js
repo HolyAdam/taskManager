@@ -2,6 +2,7 @@ import Component from './Component'
 import apiService from '../services/apiService'
 import SelectPure from '../library/multiselect'
 
+
 export default class AddComponent extends Component {
 
 	constructor(id) {
@@ -12,14 +13,15 @@ export default class AddComponent extends Component {
 
 	init() {
 
-		const myOptions = [
+
+		let myOptions = [
+		{
+		  label: "achek_slime",
+		  value: "achek_slime",
+		},
 		  {
 		    label: "adam",
 		    value: "adam",
-		  },
-		  {
-		    label: "achek_slime",
-		    value: "achek_slime",
 		  },
 		  {
 		    label: "misha1337",
@@ -37,45 +39,102 @@ export default class AddComponent extends Component {
 			value: ''
 		}
 
-		this.contacts = ["adam"]
 
-		const instance = new SelectPure("#select", {
-		    options: myOptions,
-		    multiple: true,
-		    value: ["adam"],
-		    onChange: value => {
-		    	this.contacts = []
-		    	this.$el.querySelector('button').disabled = !(value.length && this.state.valid)
-		    	if (value.length && this.state.value.match(/[А-ЯёA-F]+/ig) && 
-		    		this.state.value.trim().length > 3) {
-		    		document.querySelectorAll('.error').forEach(error => error.remove())	
+		// p.s sadge что нет метода который бы обновлял данные у селекта - cringe
 
-		    		document.querySelector('.add .add__input').style.border = ''
-		    		this.$el.querySelector('button').disabled = false
-		    		this.state.valid = true
-		    		this.state.errors = new Set()
+		if (localStorage.getItem('nickname')) {
 
-		    	}
-		    	for (const contact of value) {
-		    		this.contacts.push(contact)
-		    	} 
-		    	console.log(this.contacts)
-		    },
-			classNames: {
-			      select: "select-pure__select",
-			      dropdownShown: "select-pure__select--opened",
-			      multiselect: "select-pure__select--multiple",
-			      label: "select-pure__label",
-			      placeholder: "select-pure__placeholder",
-			      dropdown: "select-pure__options",
-			      option: "select-pure__option",
-			      autocompleteInput: "select-pure__autocomplete",
-			      selectedLabel: "select-pure__selected-label",
-			      selectedOption: "select-pure__option--selected",
-			      placeholderHidden: "select-pure__placeholder--hidden",
-			      optionHidden: "select-pure__option--hidden",
-			    }
-		});
+			myOptions = myOptions.filter(item => {
+				return item.value !== localStorage.getItem('nickname')
+			})
+
+			this.contacts = [myOptions[0].value]
+
+			const instance = new SelectPure("#select", {
+			    options: myOptions,
+			    multiple: true,
+			    value: [myOptions[0].value],
+			    onChange: value => {
+			    	this.contacts = []
+			    	this.$el.querySelector('button').disabled = !(value.length && this.state.valid)
+			    	if (value.length && this.state.value.match(/[А-ЯёA-F]+/ig) && 
+			    		this.state.value.trim().length > 3) {
+			    		document.querySelectorAll('.error').forEach(error => error.remove())	
+
+			    		document.querySelector('.add .add__input').style.border = ''
+			    		this.$el.querySelector('button').disabled = false
+			    		this.state.valid = true
+			    		this.state.errors = new Set()
+
+			    	}
+			    	for (const contact of value) {
+			    		this.contacts.push(contact)
+			    	} 
+			    },
+				classNames: {
+				      select: "select-pure__select",
+				      dropdownShown: "select-pure__select--opened",
+				      multiselect: "select-pure__select--multiple",
+				      label: "select-pure__label",
+				      placeholder: "select-pure__placeholder",
+				      dropdown: "select-pure__options",
+				      option: "select-pure__option",
+				      autocompleteInput: "select-pure__autocomplete",
+				      selectedLabel: "select-pure__selected-label",
+				      selectedOption: "select-pure__option--selected",
+				      placeholderHidden: "select-pure__placeholder--hidden",
+				      optionHidden: "select-pure__option--hidden",
+				    }
+			});
+		}
+
+		document.addEventListener('loadForLogin', e => {
+			
+
+			myOptions = myOptions.filter(item => {
+				return item.value !== localStorage.getItem('nickname')
+			})
+
+			this.contacts = [myOptions[0].value]
+
+			const instance = new SelectPure("#select", {
+			    options: myOptions,
+			    multiple: true,
+			    value: [myOptions[0].value],
+			    onChange: value => {
+			    	this.contacts = []
+			    	this.$el.querySelector('button').disabled = !(value.length && this.state.valid)
+			    	if (value.length && this.state.value.match(/[А-ЯёA-Z]+/ig) && 
+			    		this.state.value.trim().length > 3) {
+			    		document.querySelectorAll('.error').forEach(error => error.remove())	
+
+			    		document.querySelector('.add .add__input').style.border = ''
+			    		this.$el.querySelector('button').disabled = false
+			    		this.state.valid = true
+			    		this.state.errors = new Set()
+
+			    	}
+			    	for (const contact of value) {
+			    		this.contacts.push(contact)
+			    	} 
+			    },
+				classNames: {
+				      select: "select-pure__select",
+				      dropdownShown: "select-pure__select--opened",
+				      multiselect: "select-pure__select--multiple",
+				      label: "select-pure__label",
+				      placeholder: "select-pure__placeholder",
+				      dropdown: "select-pure__options",
+				      option: "select-pure__option",
+				      autocompleteInput: "select-pure__autocomplete",
+				      selectedLabel: "select-pure__selected-label",
+				      selectedOption: "select-pure__option--selected",
+				      placeholderHidden: "select-pure__placeholder--hidden",
+				      optionHidden: "select-pure__option--hidden",
+				    }
+			});
+
+		})
 
 
 		this.$el.querySelector('input').addEventListener('input', addInputHandler.bind(this))
@@ -102,7 +161,7 @@ function addInputHandler(e) {
 
 	this.state.value = target.value
 
-	if (target.value.match(/[А-ЯёA-F]+/ig) && target.value.trim().length > 3 && this.contacts.length) {
+	if (target.value.match(/[А-ЯёA-Z]+/ig) && target.value.trim().length > 3 && this.contacts.length) {
 		this.state.valid = true
 		this.state.errors = new Set()
 	} else {
@@ -141,6 +200,8 @@ async function submitFormHandler(e) {
 	e.preventDefault()
 
 	if (this.state.valid) {
+
+		this.contacts.push(localStorage.getItem('nickname')) // остановился на пуше юзера в массив, который залоггинен
 
 		const data = {
 			value: this.state.value,

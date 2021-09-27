@@ -64,6 +64,9 @@ function loginSubmitHandler(e) {
 			password
 		}
 
+
+		
+
 		authWithData(email, password)
 			.then(data => {
 
@@ -90,6 +93,11 @@ function loginSubmitHandler(e) {
 				localStorage.setItem('refreshToken', data['refreshToken'])
 
 				showElemsIfLoginIn()
+
+
+				// Делаем событие на документ, что произошел логин и подгружаем селект
+				const customLoadLoginEvent = new CustomEvent('loadForLogin')
+				document.dispatchEvent(customLoadLoginEvent)
 
 
 			})

@@ -869,7 +869,11 @@ function renderUnderTaskForm() {
 					<h3 class="title">Добавить таск</h3>
 					<input type="text" require minlength="3" placeholder="Название таска" name="name_task">
 					<textarea placeholder="Описание таска" name="descr"></textarea>
-						<div id="renderTaskSelect"></div>
+
+						<div id="renderSelectBox">
+							<span class="renderSelectNaming">Исполнители:</span>
+							<div id="renderTaskSelect"></div>
+						</div>
 					<button class="btn undertaskform-btn">
 							
 							<span>Добавить</span>
