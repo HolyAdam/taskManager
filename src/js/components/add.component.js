@@ -133,7 +133,9 @@ async function submitFormHandler(e) {
 
 	if (this.state.valid) {
 
-		this.contacts.push(localStorage.getItem('nickname')) // остановился на пуше юзера в массив, который залоггинен
+		if (!this.contacts.includes(localStorage.getItem('nickname'))) {
+			this.contacts.push(localStorage.getItem('nickname'))
+		} 
 
 		const data = {
 			value: this.state.value,
