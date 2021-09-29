@@ -40,99 +40,31 @@ export default class AddComponent extends Component {
 		}
 
 
+		/*
+			const myData = Object.values(data).map(contact => {
+				return {
+					label: contact.nick,
+					value: contact.nick
+				}
+			})
+		*/
+
 		// p.s sadge что нет метода который бы обновлял данные у селекта - cringe
+
 
 		if (localStorage.getItem('nickname')) {
 
-			myOptions = myOptions.filter(item => {
-				return item.value !== localStorage.getItem('nickname')
-			})
+			fetchContacts.call(this, 'https://taskmanager412-default-rtdb.firebaseio.com/contacts.json',
+				myOptions)
 
-			this.contacts = [myOptions[0].value]
-
-			const instance = new SelectPure("#select", {
-			    options: myOptions,
-			    multiple: true,
-			    value: [myOptions[0].value],
-			    onChange: value => {
-			    	this.contacts = []
-			    	this.$el.querySelector('button').disabled = !(value.length && this.state.valid)
-			    	if (value.length && this.state.value.match(/[А-ЯёA-F]+/ig) && 
-			    		this.state.value.trim().length > 3) {
-			    		document.querySelectorAll('.error').forEach(error => error.remove())	
-
-			    		document.querySelector('.add .add__input').style.border = ''
-			    		this.$el.querySelector('button').disabled = false
-			    		this.state.valid = true
-			    		this.state.errors = new Set()
-
-			    	}
-			    	for (const contact of value) {
-			    		this.contacts.push(contact)
-			    	} 
-			    },
-				classNames: {
-				      select: "select-pure__select",
-				      dropdownShown: "select-pure__select--opened",
-				      multiselect: "select-pure__select--multiple",
-				      label: "select-pure__label",
-				      placeholder: "select-pure__placeholder",
-				      dropdown: "select-pure__options",
-				      option: "select-pure__option",
-				      autocompleteInput: "select-pure__autocomplete",
-				      selectedLabel: "select-pure__selected-label",
-				      selectedOption: "select-pure__option--selected",
-				      placeholderHidden: "select-pure__placeholder--hidden",
-				      optionHidden: "select-pure__option--hidden",
-				    }
-			});
+			
 		}
 
 		document.addEventListener('loadForLogin', e => {
-			
 
-			myOptions = myOptions.filter(item => {
-				return item.value !== localStorage.getItem('nickname')
-			})
+			fetchContacts.call(this, 'https://taskmanager412-default-rtdb.firebaseio.com/contacts.json',
+				myOptions)
 
-			this.contacts = [myOptions[0].value]
-
-			const instance = new SelectPure("#select", {
-			    options: myOptions,
-			    multiple: true,
-			    value: [myOptions[0].value],
-			    onChange: value => {
-			    	this.contacts = []
-			    	this.$el.querySelector('button').disabled = !(value.length && this.state.valid)
-			    	if (value.length && this.state.value.match(/[А-ЯёA-Z]+/ig) && 
-			    		this.state.value.trim().length > 3) {
-			    		document.querySelectorAll('.error').forEach(error => error.remove())	
-
-			    		document.querySelector('.add .add__input').style.border = ''
-			    		this.$el.querySelector('button').disabled = false
-			    		this.state.valid = true
-			    		this.state.errors = new Set()
-
-			    	}
-			    	for (const contact of value) {
-			    		this.contacts.push(contact)
-			    	} 
-			    },
-				classNames: {
-				      select: "select-pure__select",
-				      dropdownShown: "select-pure__select--opened",
-				      multiselect: "select-pure__select--multiple",
-				      label: "select-pure__label",
-				      placeholder: "select-pure__placeholder",
-				      dropdown: "select-pure__options",
-				      option: "select-pure__option",
-				      autocompleteInput: "select-pure__autocomplete",
-				      selectedLabel: "select-pure__selected-label",
-				      selectedOption: "select-pure__option--selected",
-				      placeholderHidden: "select-pure__placeholder--hidden",
-				      optionHidden: "select-pure__option--hidden",
-				    }
-			});
 
 		})
 
@@ -220,4 +152,74 @@ async function submitFormHandler(e) {
 	
 	}
 
+}
+
+
+function initSelectWithDynamicData(data, arr) {
+
+
+	data = data || {}
+
+	const myData = Object.values(data).map(contact => {
+		return {
+			label: contact.nick,
+			value: contact.nick
+		}
+	})
+
+	arr.push(...myData)
+
+	arr = arr.filter(item => {
+		return item.value !== localStorage.getItem('nickname')
+	})
+
+	this.contacts = [arr[0].value]
+
+	const instance = new SelectPure("#select", {
+	    options: arr,
+	    multiple: true,
+	    value: [arr[0].value],
+	    onChange: value => {
+	    	this.contacts = []
+	    	this.$el.querySelector('button').disabled = !(value.length && this.state.valid)
+	    	if (value.length && this.state.value.match(/[А-ЯёA-F]+/ig) && 
+	    		this.state.value.trim().length > 3) {
+	    		document.querySelectorAll('.error').forEach(error => error.remove())	
+
+	    		document.querySelector('.add .add__input').style.border = ''
+	    		this.$el.querySelector('button').disabled = false
+	    		this.state.valid = true
+	    		this.state.errors = new Set()
+
+	    	}
+	    	for (const contact of value) {
+	    		this.contacts.push(contact)
+	    	} 
+	    },
+		classNames: {
+		      select: "select-pure__select",
+		      dropdownShown: "select-pure__select--opened",
+		      multiselect: "select-pure__select--multiple",
+		      label: "select-pure__label",
+		      placeholder: "select-pure__placeholder",
+		      dropdown: "select-pure__options",
+		      option: "select-pure__option",
+		      autocompleteInput: "select-pure__autocomplete",
+		      selectedLabel: "select-pure__selected-label",
+		      selectedOption: "select-pure__option--selected",
+		      placeholderHidden: "select-pure__placeholder--hidden",
+		      optionHidden: "select-pure__option--hidden",
+		    }
+	});
+
+
+}
+
+
+
+function fetchContacts(url, myOptions) {
+	return fetch(url)
+				.then(response => response.json())
+				.then(data => initSelectWithDynamicData.call(this, data, myOptions))
+				
 }
